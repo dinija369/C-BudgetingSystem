@@ -19,68 +19,6 @@ namespace Application
         private string password;
         private string username;
 
-        //sets user name and password for a team
-        public void setTeamLogin()
-		{
-			//gets passord from the user
-			Console.WriteLine("\n>> Please enter Username and password <<");
-            Console.WriteLine("\nPassword* (at least 2 characters) >> ");
-			//collects the password
-			password = Console.ReadLine();
-			//gets the length of the password
-			int length = password.Length;
-			//while loop checks if the password length is more than 2 and keeps looping if it is less
-			while (length < 2)
-			{
-				//checks the password length again for the while loop
-				Console.WriteLine("*** Passsword is too short ***\nPlease try again >> ");
-				password = Console.ReadLine();
-				length = password.Length;
-			}
-			//gets the username and user name length
-			Console.WriteLine("Username* >> ");
-			username = Console.ReadLine();
-			length = username.Length;
-            //while loop checks if the username length is more than 2 and keeps looping if it is less
-            while (length < 2)
-			{
-                //checks the username length again for the while loop
-                Console.WriteLine("*** Please enter username >> ");
-				username = Console.ReadLine();
-				length = username.Length;
-			}
-			//saves the user entered password to an array list that will be used TODO!!!!!!!!!!!
-			Password.Add(password);
-            //saves the user entered username to an array list that will be used TODO!!!!!!!!!!!
-            Username.Add(username);
-
-        }
-
-		//supervisor and department team info collected from the user and added to a corresponding array list
-		public void setTeamProfile()
-		{
-			Console.WriteLine("\n>> Create a team <<\n");
-			Console.WriteLine("Department* >> ");
-			//collects department name from user
-			department = Console.ReadLine();
-			//gets the length of the department and keeps repaeting the wile loop if the length is less than two
-			int length = department.Length;
-			while (length < 2)
-			{
-				Console.WriteLine("*** Please enter department >> ");
-				department = Console.ReadLine();
-				//if length is two or more exits the while loop
-				length = department.Length;
-			}
-			//collects the suprevisor name for the department
-			Console.WriteLine("Supervisor >> ");
-			supervisor = Console.ReadLine();
-
-			//ads department and supervisor names to corresponding array lists that will be used TODO!!!!!
-			Department.Add(department);
-			Supervisor.Add(supervisor);
-
-		}
 
 		//gets team department and supervisor in null position to print in team infor in main case 6
 		public void getTeamProfile(int i)

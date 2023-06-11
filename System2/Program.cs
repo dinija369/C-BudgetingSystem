@@ -14,6 +14,7 @@ namespace Application
             Money moneyObject = new Money();
             Reports reportsObject = new Reports();
             ManagerProfile managerObject = new ManagerProfile();
+            SqlConnTeamProfile sqlConn = new SqlConnTeamProfile();
 
             //integer array declarations
             //used for the user to choose manager or team mode. if array takes 1 as an input - team mode accessed, 2 - manager mode
@@ -49,11 +50,11 @@ namespace Application
             //if statement checks the user input and runs the corresponding code
             if (managerTeamView == 1)
             {
-                //'Teams' class method. prompts the user for password and username and saves them in arraylist
-                teams.setTeamLogin();
                 //'Teams' class method. prompts the user for profile details and saves them in arraylist
-                teams.setTeamProfile();
-                //will jump to the firrst condition in below switch statement
+                SqlConnTeamProfile.TeamProfile();
+
+                SqlConnTeamProfile.TeamLogin();
+                //will jump to the first condition in below switch statement
                 menuOption = 1;
 
                 do
@@ -72,7 +73,7 @@ namespace Application
                         case 2:
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> ADD ALLOWANCE <<|\n");
-                            //allows a useer to set allowance for the team
+                            //allows a user to set allowance for the team
                             moneyObject.setAllowance(i = 0);
                             //returns allowance from the setAloowance method above that is stored in allowance variable and printed in home screen.
                             allowance = moneyObject.getAllowance(i = 0);
@@ -309,8 +310,8 @@ namespace Application
                             //allows the manager to add teams
                             Menu.ManagerMenu();
                             Console.WriteLine("\n|>> ADD TEAMS <<|\n");
-                            teams.setTeamProfile();
-                            teams.setTeamLogin();
+                            SqlConnTeamProfile.TeamProfile();
+                            SqlConnTeamProfile.TeamLogin();
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:
