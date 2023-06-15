@@ -3,7 +3,7 @@ using System.Data.SqlClient;
 
 namespace Application
 {
-    public class SqlConnTeamProfile
+    public class TeamProfile
 
         //todo - merge login and profile and make the profile options possible to be null
     {
@@ -29,7 +29,7 @@ namespace Application
             }*/
         }
 
-        public static void TeamProfile()
+        public static void Profile()
         {
 
             Console.WriteLine("\n>> Create a team <<\n");
@@ -74,7 +74,7 @@ namespace Application
             }*/
         }
 
-        public static void TeamLogin()
+        public static void Login()
         {
             //gets passord from the user
             Console.WriteLine("\n>> Please enter Username and password <<");

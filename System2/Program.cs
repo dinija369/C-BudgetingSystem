@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualBasic;
 using System;
 using System.ComponentModel.Design;
+using System2;
 
 namespace Application
 {
@@ -14,7 +15,8 @@ namespace Application
             Money moneyObject = new Money();
             Reports reportsObject = new Reports();
             ManagerProfile managerObject = new ManagerProfile();
-            SqlConnTeamProfile sqlConn = new SqlConnTeamProfile();
+            TeamProfile sqlConn = new TeamProfile();
+            Expense expenseObj = new Expense();
 
             //integer array declarations
             //used for the user to choose manager or team mode. if array takes 1 as an input - team mode accessed, 2 - manager mode
@@ -51,9 +53,9 @@ namespace Application
             if (managerTeamView == 1)
             {
                 //'Teams' class method. prompts the user for profile details and saves them in arraylist
-                SqlConnTeamProfile.TeamProfile();
+                TeamProfile.Profile();
 
-                SqlConnTeamProfile.TeamLogin();
+                TeamProfile.Login();
                 //will jump to the first condition in below switch statement
                 menuOption = 1;
 
@@ -66,7 +68,8 @@ namespace Application
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> HOME <<|\n");
                             //prints the current allowance, expense and money left. allowance is taken from case 2. expense and money left is taken from case 3
-                            Console.WriteLine("Allowance " + allowance + "\nMoney spent " + expense + "\nMoney left " + moneyLeft);
+                            Console.WriteLine("Allowance " + allowance);
+                            expenseObj.printExpense();
                             //checks the case choice to go to another menu item for errors
                             menuOption = errorObject.errorInput();
                             break;
@@ -82,31 +85,7 @@ namespace Application
                         case 3:
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> ADD EXPENSE <<|\n");
-                            while(true)
-                            {
-                                try
-                                {
-                                    //expense money collected
-                                    Console.WriteLine("Money spent >> ");
-                                    expenseMoney = float.Parse(Console.ReadLine());
-                                    break;
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Console.WriteLine(ex.Message);
-                                }
-                            }
-                            //comments for expense collected
-                            Console.WriteLine("Comments >> ");
-                            string expenseComment = Console.ReadLine();
-                            //total spent is calculated, added to a list and returned after each expense
-                            expense = moneyObject.Expense(expenseMoney, i);
-                            //remaining balance is calculated after each expense added to a list and returned
-                            moneyLeft = moneyObject.RemainingBalance(i);
-                            //current date saved to a date variable
-                            string date = DateTime.Now.ToString("dd/MM/yyyy");
-                            //date, comment and money spent is passed to a reports class to be used for reports
-                            reportsObject.setItemisedSpend(date, expenseComment, expenseMoney);
+                            expenseObj.getExpense();
                             menuOption = errorObject.errorInput();
                             break;
                         case 4:
@@ -154,7 +133,7 @@ namespace Application
                     try
                     {
                         Menu.RegisterOrLogin();
-                        registerLogin = Console.Read();
+                        registerLogin = Convert.ToInt32(Console.ReadLine());
                         break;
                     }
                     catch
@@ -167,15 +146,15 @@ namespace Application
                 if (registerLogin == 1)
                 {
                     //prompts the user for password and username and saves them in string array list for manager profile
-                    managerObject.setManagerLogin();
+                    managerObject.ManagerLogin();
                     //prompts the user for name, surname, email and phone and saves them in string list for manager profile
-                    managerObject.setManagerProfile();
+                    managerObject.managerProfile();
                 }
 
                 else
                 {
                     //prompts the user for password and username and saves them in string array list for manager profile
-                    managerObject.setManagerLogin();
+                    managerObject.ManagerLogin();
                 }
 
                 menuOption = 1;
@@ -233,32 +212,7 @@ namespace Application
                                                     break;
                                                 case 3:
                                                     Menu.TeamMenu();
-                                                    Console.WriteLine("\n|>> ADD EXPENSE <<|\n");
-                                                    while (true)
-                                                    {
-                                                        try
-                                                        {
-                                                            //expense money collected
-                                                            Console.WriteLine("Money spent >> ");
-                                                            expenseMoney = float.Parse(Console.ReadLine());
-                                                            break;
-                                                        }
-                                                        catch (Exception ex)
-                                                        {
-                                                            System.Console.WriteLine(ex.Message);
-                                                        }
-                                                    }
-                                                    //comments for expense collected
-                                                    Console.WriteLine("Comments >> ");
-                                                    string expenseComment = Console.ReadLine();
-                                                    //total spent is calculated, added to a list and returned after each expense
-                                                    expense = moneyObject.Expense(expenseMoney, i);
-                                                    //remaining balance is calculated after each expense added to a list and returned
-                                                    moneyLeft = moneyObject.RemainingBalance(i);
-                                                    //current date saved to a date variable
-                                                    string date = DateTime.Now.ToString("dd/MM/yyyy");
-                                                    //date, comment and money spent is passed to a reports class to be used for reports
-                                                    reportsObject.setItemisedSpend(date, expenseComment, expenseMoney);
+                                                    expenseObj.getExpense();
                                                     menuOption = errorObject.errorInput();
                                                     break;
                                                 case 4:
@@ -310,8 +264,8 @@ namespace Application
                             //allows the manager to add teams
                             Menu.ManagerMenu();
                             Console.WriteLine("\n|>> ADD TEAMS <<|\n");
-                            SqlConnTeamProfile.TeamProfile();
-                            SqlConnTeamProfile.TeamLogin();
+                            TeamProfile.Profile();
+                            TeamProfile.Login();
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:

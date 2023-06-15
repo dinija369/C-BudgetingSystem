@@ -1,5 +1,7 @@
 ﻿using System;
-
+using System.Data.SqlClient;
+using System.Numerics;
+using System.Xml.Linq;
 
 namespace Application
 {
@@ -18,8 +20,26 @@ namespace Application
         List<string> Surname = new List<string>();
         List<string> Email = new List<string>();
         List<string> Phone = new List<string>();
+
+        private static void setManagerLogin(string username, string password)
+        {
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            //string query = "SELECT * FROM dbo.users";
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+            //
+            string query = "INSERT INTO dbo.Manager_login ([Username], [Password]) VALUES (@username, @password)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@username", username);
+            command.Parameters.AddWithValue("@password", password);
+
+            SqlDataReader reader = command.ExecuteReader();
+        }
+
         //prompts the user to enter password and username, scans the entry and stores data in lists
-        public void setManagerLogin()
+        public void ManagerLogin()
 		{
             Console.WriteLine("\n>> Please enter Username and password <<");
             Console.WriteLine("\nPassword* (at least 2 characters) >> ");
@@ -51,9 +71,31 @@ namespace Application
             Surname.Add("None");
             Email.Add("None");
             Phone.Add("None");
+
+            setManagerLogin(username, password);
         }
 
-        public void setManagerProfile()
+        private static void setManagerProfile(string username, string name, string surname, string email, string phone)
+        {
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            //string query = "SELECT * FROM dbo.users";
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+            //
+            string query = "INSERT INTO dbo.Manager_profile ([Username], [Name], [Surname], [Email], [Phone]) VALUES (@username, @name, @surname, @email, @phone)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@username", username);
+            command.Parameters.AddWithValue("@name", name);
+            command.Parameters.AddWithValue("@surname", surname);
+            command.Parameters.AddWithValue("@email", email);
+            command.Parameters.AddWithValue("@phone", phone);
+
+            SqlDataReader reader = command.ExecuteReader();
+        }
+
+        public void managerProfile()
         {
             Console.WriteLine("\n>> Create an account. <<\n");
             Console.WriteLine("Name* >> ");
@@ -83,12 +125,16 @@ namespace Application
             //collects phone number
             Console.WriteLine("Phone number >> ");
             string phone = Console.ReadLine();
+            Console.WriteLine("Username* >> ");
+            username = Console.ReadLine();
 
             //replaces the placeholders in the lists with  user input values from profile section in main
             Name.Insert(0, name);
             Surname.Insert(0, surname);
             Email.Insert(0, email);
             Phone.Insert(0, phone);
+
+            setManagerProfile(username, name, surname, email, phone);
         }
         //prints manager account details in profile section in main case 5
         public void getManagerProfile()

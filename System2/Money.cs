@@ -112,6 +112,7 @@ namespace Application
             Console.WriteLine("Department* >> ");
             //collects department name from user
             string dep = Console.ReadLine();
+
             //TO REMOVE
             //ads both dates to a dictionary
             DateFromTo.Add(date, dateTo);
