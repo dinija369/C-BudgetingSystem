@@ -9,10 +9,11 @@ namespace Application
     {
         private static void setTeamProfile(string dep, string sup)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetSystem; Trusted_Connection = True;";
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
             //string query = "SELECT * FROM dbo.users";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
+            //
             string query = "INSERT INTO dbo.Team_profile ([Department], [Supervisor]) VALUES (@dep, @sup)";
 
             SqlCommand command = new SqlCommand(query, connection);
@@ -35,7 +36,7 @@ namespace Application
             Console.WriteLine("Department* >> ");
             //collects department name from user
             string dep = Console.ReadLine();
-            //gets the length of the department and keeps repaeting the wile loop if the length is less than two
+            //gets the length of the department and keeps repeating the wile loop if the length is less than two
             int length = dep.Length;
             while (length < 2)
             {
@@ -48,13 +49,13 @@ namespace Application
             Console.WriteLine("Supervisor >> ");
             string sup = Console.ReadLine();
 
+            //passes the department and supervisor parameters to the method that will save them in database
             setTeamProfile(dep, sup);
         }
 
         private static void SetTeamLogin(string dep, string use, string pass)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetSystem; Trusted_Connection = True;";
-            //string query = "SELECT * FROM dbo.users";
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Team_login ([Department], [Username], [Password]) VALUES (@dep, @use, @pass)";
@@ -107,6 +108,7 @@ namespace Application
             //collects department name from user
             string dep = Console.ReadLine();
 
+            //passes the department, username and password parameters to the method that will save them in database
             SetTeamLogin(dep, use, pass);
         }
         

@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System.Collections;
+using System.Data.SqlClient;
 
 namespace Application
 {
@@ -32,7 +33,30 @@ namespace Application
 
         //gets information about allowance for each team. per person, people in a team, date from to. calculates the allowance for the team and saves allowance in a 
         //list and dates in a dictionary.
-        public void setAllowance(int i)
+        //todo - figure out how to get the session and work from that. Like each department session.
+
+        private static void SetAllowance(string dep, string date, string dateTo, float allowancePerTeam)
+        {
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+            string query = "INSERT INTO dbo.Allowance_table ([Department], [Allowance], [Date_from], [Date_to]) VALUES (@dep, @allowance, @date_from, @date_to)";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@allowance", allowancePerTeam);
+            command.Parameters.AddWithValue("@date_from", date);
+            command.Parameters.AddWithValue("@date_to", dateTo);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            /*while (reader.Read())
+            {
+                Console.WriteLine(reader.GetString(0) + " - " + reader.GetString(1) + " - " + reader.GetString(2));
+            }*/
+        }
+        public void Allowance(int i)
 		{
             //collects allowance per person
             while (true)
@@ -54,7 +78,7 @@ namespace Application
                 try
                 {
                     Console.WriteLine("People in the team >> ");
-                    peopleInTeam = Console.Read();
+                    peopleInTeam = Convert.ToInt32(Console.ReadLine());
                     break;
                 }
                 catch
@@ -84,32 +108,79 @@ namespace Application
                     Console.WriteLine("*** Input not recognised ***");
                 }
             }
+
+            Console.WriteLine("Department* >> ");
+            //collects department name from user
+            string dep = Console.ReadLine();
+            //TO REMOVE
             //ads both dates to a dictionary
             DateFromTo.Add(date, dateTo);
             //calculates the  allowance for each team based on people in the team and allowance per person
             allowancePerTeam = allowancePerPerson * peopleInTeam;
             //inserts the allowance for each team in a position 0
             allowance.Insert(i, allowancePerTeam);
+            //TO REMOVE
+
+            SetAllowance(dep, date, dateTo, allowancePerTeam);
         }
 
         public float getAllowance(int i)
         {
             return allowance[i];
         }
-        /////////////////////////////Seperate total spent money calculation and adding from last line of getting it////////////////////////////////
+
+        private static void setExpense(string dep, float totalSpent)
+        {
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+            string query = "UPDATE dbo.Allowance_table SET [Total_spent] = @totalSpent WHERE [Department] = @dep";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@totalSpent", totalSpent);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+        }
+
         public float Expense(float expenseMoney, int i)
         {
+            Console.WriteLine("Department* >> ");
+            //collects department name from user
+            string dep = Console.ReadLine();
             //total spent amount is gotten from adding new expense to total spent
             totalSpent += expenseMoney;
             //total spent is saved to a list
             moneySpent.Insert(i, totalSpent);
+            setExpense(dep, totalSpent);
             //total spent is returned and collecetd by expense variable in main and printed on the home screen
             return moneySpent[i];
         }
 
-        //calculates the remaining balance after each expense made.
-        public float getRemainingBalance(int i)
+        private static void setRemainingBalance(string dep, float newRemainingBalance)
         {
+            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+            string query = "UPDATE dbo.Allowance_table SET [Money_left] = @balance WHERE [Department] = @dep";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@balance", newRemainingBalance);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+        }
+
+        //calculates the remaining balance after each expense made.
+        public float RemainingBalance(int i)
+        {
+            Console.WriteLine("Department* >> ");
+            //collects department name from user
+            string dep = Console.ReadLine();
             //calculates remaining balance by substracting total spent from allowance
             float newRemainingBalance = allowancePerTeam - totalSpent;
             //if allowance per team has been set
@@ -123,6 +194,7 @@ namespace Application
             }
             //ads new remaining balance to a list after each calculation
             remainingBalance.Insert(i, newRemainingBalance);
+            setRemainingBalance(dep, newRemainingBalance);
             //returns remaining balance and to keep it is money left variable on main and print it in a home page
             return remainingBalance[i];
         }

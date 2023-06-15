@@ -74,7 +74,7 @@ namespace Application
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> ADD ALLOWANCE <<|\n");
                             //allows a user to set allowance for the team
-                            moneyObject.setAllowance(i = 0);
+                            moneyObject.Allowance(i = 0);
                             //returns allowance from the setAloowance method above that is stored in allowance variable and printed in home screen.
                             allowance = moneyObject.getAllowance(i = 0);
                             menuOption = errorObject.errorInput();
@@ -102,7 +102,7 @@ namespace Application
                             //total spent is calculated, added to a list and returned after each expense
                             expense = moneyObject.Expense(expenseMoney, i);
                             //remaining balance is calculated after each expense added to a list and returned
-                            moneyLeft = moneyObject.getRemainingBalance(i);
+                            moneyLeft = moneyObject.RemainingBalance(i);
                             //current date saved to a date variable
                             string date = DateTime.Now.ToString("dd/MM/yyyy");
                             //date, comment and money spent is passed to a reports class to be used for reports
@@ -113,7 +113,7 @@ namespace Application
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> REPORTS <<|\n");
                             //gets the report and passes expense and remaining balance arguments to print in the report
-                            reportsObject.Report(expense, moneyObject.getRemainingBalance(i));
+                            reportsObject.Report(expense, moneyObject.RemainingBalance(i));
                             menuOption = errorObject.errorInput();
                             break;
                         case 5:
@@ -225,8 +225,8 @@ namespace Application
                                                 case 2:
                                                     Menu.TeamMenu();
                                                     Console.WriteLine("\n|>> ADD ALLOWANCE <<|\n");
-                                                    //allows a useer to set allowance for the team
-                                                    moneyObject.setAllowance(i = 0);
+                                                    //allows a user to set allowance for the team
+                                                    moneyObject.Allowance(i = 0);
                                                     //returns allowance from the setAloowance method above that is stored in allowance variable and printed in home screen.
                                                     allowance = moneyObject.getAllowance(i = 0);
                                                     menuOption = errorObject.errorInput();
@@ -254,7 +254,7 @@ namespace Application
                                                     //total spent is calculated, added to a list and returned after each expense
                                                     expense = moneyObject.Expense(expenseMoney, i);
                                                     //remaining balance is calculated after each expense added to a list and returned
-                                                    moneyLeft = moneyObject.getRemainingBalance(i);
+                                                    moneyLeft = moneyObject.RemainingBalance(i);
                                                     //current date saved to a date variable
                                                     string date = DateTime.Now.ToString("dd/MM/yyyy");
                                                     //date, comment and money spent is passed to a reports class to be used for reports
@@ -265,7 +265,7 @@ namespace Application
                                                     Menu.TeamMenu();
                                                     Console.WriteLine("\n|>> REPORTS <<|\n");
                                                     //gets the report and passes expense and remaining balance arguments to print in the report
-                                                    reportsObject.Report(expense, moneyObject.getRemainingBalance(i));
+                                                    reportsObject.Report(expense, moneyObject.RemainingBalance(i));
                                                     menuOption = errorObject.errorInput();
                                                     break;
                                                 case 5:
