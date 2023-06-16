@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System2;
 
 namespace Application
 {
     public class TeamProfile
+    {
+        Session session = new Session();
 
         //todo - merge login and profile and make the profile options possible to be null
-    {
         private static void setTeamProfile(string dep, string sup)
         {
             string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
@@ -29,7 +31,7 @@ namespace Application
             }*/
         }
 
-        public static void Profile()
+        public void Profile()
         {
 
             Console.WriteLine("\n>> Create a team <<\n");
@@ -45,10 +47,11 @@ namespace Application
                 //if length is two or more exits the while loop
                 length = dep.Length;
             }
+
             //collects the suprevisor name for the department
             Console.WriteLine("Supervisor >> ");
             string sup = Console.ReadLine();
-
+            session.setSession(dep);
             //passes the department and supervisor parameters to the method that will save them in database
             setTeamProfile(dep, sup);
         }
@@ -74,7 +77,7 @@ namespace Application
             }*/
         }
 
-        public static void Login()
+        public void Login()
         {
             //gets passord from the user
             Console.WriteLine("\n>> Please enter Username and password <<");
@@ -104,10 +107,7 @@ namespace Application
                 length = use.Length;
             }
 
-            Console.WriteLine("Department* >> ");
-            //collects department name from user
-            string dep = Console.ReadLine();
-
+            string dep = Session.getSession();
             //passes the department, username and password parameters to the method that will save them in database
             SetTeamLogin(dep, use, pass);
         }

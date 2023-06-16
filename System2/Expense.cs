@@ -66,9 +66,7 @@ namespace System2
             moneyLeft = moneyObject.RemainingBalance(i);
             //current date saved to a date variable
             string date = DateTime.Now.ToString("dd/MM/yyyy");
-            Console.WriteLine("Department* >> ");
-            //collects department name from user
-            string department = Console.ReadLine();
+            string department = Session.getSession();
             //date, comment and money spent is passed to a reports class to be used for reports
             reportsObject.setItemisedSpend(date, expenseComment, expenseMoney);
             setExpense(department, expenseMoney, expenseComment, date);

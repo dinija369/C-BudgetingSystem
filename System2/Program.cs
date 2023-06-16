@@ -15,8 +15,9 @@ namespace Application
             Money moneyObject = new Money();
             Reports reportsObject = new Reports();
             ManagerProfile managerObject = new ManagerProfile();
-            TeamProfile sqlConn = new TeamProfile();
+            TeamProfile teamProfile = new TeamProfile();
             Expense expenseObj = new Expense();
+            Session session = new Session();
 
             //integer array declarations
             //used for the user to choose manager or team mode. if array takes 1 as an input - team mode accessed, 2 - manager mode
@@ -53,9 +54,9 @@ namespace Application
             if (managerTeamView == 1)
             {
                 //'Teams' class method. prompts the user for profile details and saves them in arraylist
-                TeamProfile.Profile();
+                teamProfile.Profile();
 
-                TeamProfile.Login();
+                teamProfile.Login();
                 //will jump to the first condition in below switch statement
                 menuOption = 1;
 
@@ -122,6 +123,8 @@ namespace Application
                     }
                 //terminates do while loop if input is 7
                 } while (menuOption != 7);
+
+               Session.endSession();
 
             }
 
@@ -264,8 +267,8 @@ namespace Application
                             //allows the manager to add teams
                             Menu.ManagerMenu();
                             Console.WriteLine("\n|>> ADD TEAMS <<|\n");
-                            TeamProfile.Profile();
-                            TeamProfile.Login();
+                            teamProfile.Profile();
+                            teamProfile.Login();
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:
@@ -296,6 +299,8 @@ namespace Application
 
                 //while statement in do while loop. terminates the loop if 'menuOption' is 6
                 } while (menuOption != 6);
+
+                Session.endSession();
             }
 
 

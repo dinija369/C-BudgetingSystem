@@ -4,12 +4,15 @@ using System.Runtime.Serialization;
 using System.Collections.Generic;
 using System.Collections;
 using System.Data.SqlClient;
+using System2;
 
 namespace Application
 {
 
 	public class Money
 	{
+        TeamProfile profile = new TeamProfile();
+
         //collects allowance per person
         private float allowancePerPerson;
         //collects the amount of people in the team
@@ -109,9 +112,7 @@ namespace Application
                 }
             }
 
-            Console.WriteLine("Department* >> ");
-            //collects department name from user
-            string dep = Console.ReadLine();
+            string dep = Session.getSession();
 
             //TO REMOVE
             //ads both dates to a dictionary
@@ -148,9 +149,7 @@ namespace Application
 
         public float Expense(float expenseMoney, int i)
         {
-            Console.WriteLine("Department* >> ");
-            //collects department name from user
-            string dep = Console.ReadLine();
+            string dep = Session.getSession();
             //total spent amount is gotten from adding new expense to total spent
             totalSpent += expenseMoney;
             //total spent is saved to a list
@@ -179,9 +178,7 @@ namespace Application
         //calculates the remaining balance after each expense made.
         public float RemainingBalance(int i)
         {
-            Console.WriteLine("Department* >> ");
-            //collects department name from user
-            string dep = Console.ReadLine();
+            string dep = Session.getSession();
             //calculates remaining balance by substracting total spent from allowance
             float newRemainingBalance = allowancePerTeam - totalSpent;
             //if allowance per team has been set
