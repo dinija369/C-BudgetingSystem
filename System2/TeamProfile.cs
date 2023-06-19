@@ -11,7 +11,7 @@ namespace Application
         //todo - merge login and profile and make the profile options possible to be null
         private static void setTeamProfile(string dep, string sup)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = Allowance.Connection();
             //string query = "SELECT * FROM dbo.users";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();

@@ -69,8 +69,10 @@ namespace Application
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> HOME <<|\n");
                             //prints the current allowance, expense and money left. allowance is taken from case 2. expense and money left is taken from case 3
-                            Console.WriteLine("Allowance " + allowance);
-                            expenseObj.printExpense();
+                            //todo - add option to update allowance as currently it will not allow it because of primary key valiation
+                            moneyObject.getAllowance();
+                            moneyObject.getTotalSpent();
+                            moneyObject.getRemainingBalance();
                             //checks the case choice to go to another menu item for errors
                             menuOption = errorObject.errorInput();
                             break;
@@ -80,7 +82,6 @@ namespace Application
                             //allows a user to set allowance for the team
                             moneyObject.Allowance(i = 0);
                             //returns allowance from the setAloowance method above that is stored in allowance variable and printed in home screen.
-                            allowance = moneyObject.getAllowance(i = 0);
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:
@@ -93,11 +94,12 @@ namespace Application
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> REPORTS <<|\n");
                             //gets the report and passes expense and remaining balance arguments to print in the report
-                            reportsObject.Report(expense, moneyObject.RemainingBalance(i));
+                            reportsObject.getExpenseReport();
+                            reportsObject.ReportSummary();
                             menuOption = errorObject.errorInput();
                             break;
                         case 5:
-                            //Notifications section. Nothing there yet but its coming
+                            //todo - notifications
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> NOTIFICATIONS <<|\n");
                             Console.WriteLine(">> You have no messages yet! <<");
@@ -106,9 +108,9 @@ namespace Application
                         case 6:
                             Console.WriteLine("\n|>> PROFILE <<|\n");
                             //prints the department and supervisor
-                            teams.getTeamProfile(i = 0);
+                            teams.getTeamProfile();
                             //prints the username
-                            teams.getTeamLogin(i = 0);
+                            teams.getTeamLogin();
                             //can update all profile details one by one
                             teams.updateProfile(i = 0);
                             Menu.TeamMenu();
@@ -161,7 +163,6 @@ namespace Application
                 }
 
                 menuOption = 1;
-                int a = 0;
 
                 do
                 {
@@ -169,99 +170,8 @@ namespace Application
                     {
                         case 1:
                             Menu.ManagerMenu();
-                            //sets moneyLeft and expense to 0 for each team
-                            moneyLeft = 0f;
-                            expense = 0f;
-                            //fisrt visit to the manager mode sets a to 1. Adding a team sets a to 2. accessing the team sets a to 3. this executes the if statement
-                            a++;
                             Console.WriteLine("\n|>> HOME <<|\n");
-                            while (true)
-                            {
-                                try
-                                {
-                                    //'Teams' class method. prints every created team by department
-                                    teams.getDepartment();
-                                    menuOption = errorObject.errorInput();
-                                    //if statement goes to team view if input is more than 6
-                                    if (menuOption > 6)
-                                    {
-                                        i = menuOption - 8;
-                                        if (a > 2)
-                                        {
-                                            //sets total spent value to 0
-                                            moneyObject.zeroTotalSpent();
-                                        }
-                                        do
-                                        {
-                                            switch (menuOption)
-                                            {
-                                                case 1:
-                                                    //prints home menu for team mode
-                                                    Menu.TeamMenu();
-                                                    Console.WriteLine("\n|>> HOME <<|\n");
-                                                    //prints the current allowance, expense and money left. allowance is taken from case 2. expense and money left is taken from case 3
-                                                    Console.WriteLine("Allowance " + allowance + "\nMoney spent " + expense + "\nMoney left " + moneyLeft);
-                                                    //checks the case choice to go to another menu item for errors
-                                                    menuOption = errorObject.errorInput();
-                                                    break;
-                                                case 2:
-                                                    Menu.TeamMenu();
-                                                    Console.WriteLine("\n|>> ADD ALLOWANCE <<|\n");
-                                                    //allows a user to set allowance for the team
-                                                    moneyObject.Allowance(i = 0);
-                                                    //returns allowance from the setAloowance method above that is stored in allowance variable and printed in home screen.
-                                                    allowance = moneyObject.getAllowance(i = 0);
-                                                    menuOption = errorObject.errorInput();
-                                                    break;
-                                                case 3:
-                                                    Menu.TeamMenu();
-                                                    expenseObj.getExpense();
-                                                    menuOption = errorObject.errorInput();
-                                                    break;
-                                                case 4:
-                                                    Menu.TeamMenu();
-                                                    Console.WriteLine("\n|>> REPORTS <<|\n");
-                                                    //gets the report and passes expense and remaining balance arguments to print in the report
-                                                    reportsObject.Report(expense, moneyObject.RemainingBalance(i));
-                                                    menuOption = errorObject.errorInput();
-                                                    break;
-                                                case 5:
-                                                    //Notifications section. Nothing there yet but its coming
-                                                    Menu.TeamMenu();
-                                                    Console.WriteLine("\n|>> NOTIFICATIONS <<|\n");
-                                                    Console.WriteLine(">> You have no messages yet! <<");
-                                                    menuOption = errorObject.errorInput();
-                                                    break;
-                                                case 6:
-                                                    Console.WriteLine("\n|>> PROFILE <<|\n");
-                                                    //prints the department and supervisor
-                                                    teams.getTeamProfile(i = 0);
-                                                    //prints the username
-                                                    teams.getTeamLogin(i = 0);
-                                                    //can update all profile details one by one
-                                                    teams.updateProfile(i = 0);
-                                                    Menu.TeamMenu();
-                                                    menuOption = errorObject.errorInput();
-                                                    break;
-                                            }
-                                            //if statement prints error message and goes to home page if input more than 7
-                                            if (menuOption > 7)
-                                            {
-                                                Console.WriteLine("\n*** Unrecognised input! ***\n");
-                                                menuOption = 1;
-                                            }
-                                            //terminates do while loop if input is 7
-                                        } while (menuOption != 7);
-
-                                        menuOption = 1;
-                                    }
-                                }
-                                catch
-                                {
-                                    Console.WriteLine();
-                                }
-                                break;
-                            }
+                            menuOption = errorObject.errorInput();
                             break;
                         case 2:
                             //allows the manager to add teams
@@ -295,10 +205,22 @@ namespace Application
                             Menu.ManagerMenu();
                             menuOption = errorObject.errorInput();
                             break;
+                        case 6:
+                            Menu.ManagerMenu();
+                            Console.WriteLine("\n|>> TEAMS <<|\n");
+                            teams.getDepartment();
+                            Console.WriteLine("Department: >>");
+                            string department = Console.ReadLine();
+                            session.setSession(department);
+                            menuOption = errorObject.errorInput();
+                            //if statement goes to team view if input is more than 6
+
+                    menuOption = errorObject.errorInput();
+                    break;
                     }
 
-                //while statement in do while loop. terminates the loop if 'menuOption' is 6
-                } while (menuOption != 6);
+                //while statement in do while loop. terminates the loop if 'menuOption' is 7
+                } while (menuOption != 7);
 
                 Session.endSession();
             }

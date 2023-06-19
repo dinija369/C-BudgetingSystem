@@ -61,20 +61,14 @@ namespace System2
             Console.WriteLine("Comments >> ");
             string expenseComment = Console.ReadLine();
             //total spent is calculated, added to a list and returned after each expense
-            expense = moneyObject.Expense(expenseMoney, i);
+            moneyObject.TotalSpent(expenseMoney, i);
             //remaining balance is calculated after each expense added to a list and returned
-            moneyLeft = moneyObject.RemainingBalance(i);
+            moneyObject.RemainingBalance(i);
             //current date saved to a date variable
             string date = DateTime.Now.ToString("dd/MM/yyyy");
             string department = Session.getSession();
-            //date, comment and money spent is passed to a reports class to be used for reports
-            reportsObject.setItemisedSpend(date, expenseComment, expenseMoney);
             setExpense(department, expenseMoney, expenseComment, date);
         }
 
-        public void printExpense()
-        {
-            Console.WriteLine("\nMoney spent " + expense + "\nMoney left " + moneyLeft);
-        }
     }
 }
