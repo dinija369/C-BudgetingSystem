@@ -11,7 +11,7 @@ namespace System2
     {
         public void setSession(string dep)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Session ([Department]) VALUES (@department)";

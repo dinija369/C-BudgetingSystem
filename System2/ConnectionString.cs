@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace System2
 {
-    internal class Allowance
+    internal class ConnectionString
     {
         public static string Connection()
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = "Server = ; Database = BudgetManager; Trusted_Connection = True;";
             return connString;
         }
     }

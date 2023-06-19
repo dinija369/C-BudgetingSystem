@@ -22,7 +22,7 @@ namespace System2
 
         private static void setExpense(string department, float expenseMoney, string expenseComment, string date)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Expense_table ([Department], [Expense], [Comment], [Date]) VALUES (@department, @expense, @comment, @date)";

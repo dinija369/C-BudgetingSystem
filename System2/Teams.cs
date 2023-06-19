@@ -25,7 +25,7 @@ namespace Application
 		{
 			string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Department], [Supervisor] FROM dbo.Team_profile";
@@ -51,7 +51,7 @@ namespace Application
         {
             string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Username] FROM dbo.Team_login";
@@ -74,7 +74,7 @@ namespace Application
 		{
             string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
      
@@ -141,7 +141,7 @@ namespace Application
 		//the number will be used to go to a specific teams profile from manager mode.
 		public void getDepartment()
 		{
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Department] FROM dbo.Team_profile";

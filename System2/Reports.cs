@@ -22,7 +22,7 @@ namespace Application
         {
             string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Expense], [Comment], [Date] FROM dbo.Expense_table WHERE [Department] = @department";

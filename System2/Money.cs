@@ -42,7 +42,7 @@ namespace Application
 
         private static void updateAllowance(string dep, string date, string dateTo, float allowancePerTeam)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "UPDATE dbo.Allowance_table SET [Allowance] = @allowance, [Date_from] = @date_from, [Date_to] = @date_to WHERE [Department] = @dep";
@@ -64,7 +64,7 @@ namespace Application
         {
             try
             {
-                string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+                string connString = ConnectionString.Connection();
                 SqlConnection connection = new SqlConnection(connString);
                 connection.Open();
                 string query = "INSERT INTO dbo.Allowance_table ([Department], [Allowance], [Date_from], [Date_to]) VALUES (@dep, @allowance, @date_from, @date_to)";
@@ -175,7 +175,8 @@ namespace Application
             Decimal allowance = 0;
             string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
+
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Allowance] FROM dbo.Allowance_table WHERE [Department] = @department";
@@ -209,7 +210,7 @@ namespace Application
         {
             string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Total_spent] FROM dbo.Allowance_table WHERE [Department] = @department";
@@ -243,7 +244,7 @@ namespace Application
 
         private static void setTotalSpent(string dep, float totalSpent)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection()   
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "UPDATE dbo.Allowance_table SET [Total_spent] = @totalSpent WHERE [Department] = @dep";
@@ -274,7 +275,7 @@ namespace Application
 
         private static void setRemainingBalance(string dep, float newRemainingBalance)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "UPDATE dbo.Allowance_table SET [Money_left] = @balance WHERE [Department] = @dep";
@@ -293,7 +294,7 @@ namespace Application
             Decimal remainingBalance = 0;
             string dep = Session.getSession();
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Money_left] FROM dbo.Allowance_table WHERE [Department] = @department";

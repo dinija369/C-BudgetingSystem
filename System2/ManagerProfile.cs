@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Numerics;
 using System.Xml.Linq;
+using System2;
 
 namespace Application
 {
@@ -23,7 +24,7 @@ namespace Application
 
         private static void setManagerLogin(string username, string password)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             //string query = "SELECT * FROM dbo.users";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
@@ -77,7 +78,7 @@ namespace Application
 
         private static void setManagerProfile(string username, string name, string surname, string email, string phone)
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             //string query = "SELECT * FROM dbo.users";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
