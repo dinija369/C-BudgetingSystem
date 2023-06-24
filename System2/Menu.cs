@@ -25,9 +25,9 @@ namespace Application
         //prints manager menu when logged in manager profile
         public static void ManagerMenu()
         {
-            Console.WriteLine("+-------------------------------------------------------------------------------------+");
-            Console.WriteLine("| 1. Home | 2. Add teams | 3. To be approved | 4. Notifications | 5.Profile | 6. Exit |");
-            Console.WriteLine("+-------------------------------------------------------------------------------------+");
+            Console.WriteLine("+-----------------------------------------------------------------------------+");
+            Console.WriteLine("| 1. Home | 2. Add teams | 3. Notifications | 4. Profile | 5. Teams | 6. Exit |");
+            Console.WriteLine("+-----------------------------------------------------------------------------+");
         }
 
         //prints teams menu when logged in teams profile

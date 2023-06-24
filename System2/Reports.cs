@@ -20,7 +20,7 @@ namespace Application
 
         public void getExpenseReport()
         {
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);

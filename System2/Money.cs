@@ -156,7 +156,7 @@ namespace Application
                 }
             }
 
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             //TO REMOVE
             //ads both dates to a dictionary
@@ -173,7 +173,7 @@ namespace Application
         public Decimal getAllowance()
         {
             Decimal allowance = 0;
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
 
@@ -208,7 +208,7 @@ namespace Application
 
         public Decimal getTotalSpent()
         {
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -244,7 +244,7 @@ namespace Application
 
         private static void setTotalSpent(string dep, float totalSpent)
         {
-            string connString = ConnectionString.Connection()   
+            string connString = ConnectionString.Connection();  
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "UPDATE dbo.Allowance_table SET [Total_spent] = @totalSpent WHERE [Department] = @dep";
@@ -260,7 +260,7 @@ namespace Application
 
         public void TotalSpent(float expenseMoney, int i)
         {
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
             //total spent amount is gotten from adding new expense to total spent
             totalSpent += expenseMoney;
             //total spent is saved to a list
@@ -292,7 +292,7 @@ namespace Application
         public Decimal getRemainingBalance()
         {
             Decimal remainingBalance = 0;
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -331,7 +331,7 @@ namespace Application
         {
             float allowance = (float)getAllowance();
             float totalSpent = (float)getTotalSpent();
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
             //calculates remaining balance by substracting total spent from allowance
             float newRemainingBalance = allowance - totalSpent;
             //if allowance per team has been set

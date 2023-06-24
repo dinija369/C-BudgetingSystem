@@ -17,7 +17,10 @@ namespace Application
             ManagerProfile managerObject = new ManagerProfile();
             TeamProfile teamProfile = new TeamProfile();
             Expense expenseObj = new Expense();
-            Session session = new Session();
+            TeamSession session = new TeamSession();
+            TeamNotifications notification = new TeamNotifications();
+            ManagerNotifications managerNotifications = new ManagerNotifications();
+            
 
             //integer array declarations
             //used for the user to choose manager or team mode. if array takes 1 as an input - team mode accessed, 2 - manager mode
@@ -102,7 +105,13 @@ namespace Application
                             //todo - notifications
                             Menu.TeamMenu();
                             Console.WriteLine("\n|>> NOTIFICATIONS <<|\n");
-                            Console.WriteLine(">> You have no messages yet! <<");
+                            TeamNotifications.getNotifications();
+                            Console.WriteLine("+ new message >> ");
+                            string newMessage = Console.ReadLine();
+                            if (newMessage == "+")
+                            {
+                                notification.Notifications();
+                            }
                             menuOption = errorObject.errorInput();
                             break;
                         case 6:
@@ -112,7 +121,7 @@ namespace Application
                             //prints the username
                             teams.getTeamLogin();
                             //can update all profile details one by one
-                            teams.updateProfile(i = 0);
+                            teams.updateProfile();
                             Menu.TeamMenu();
                             menuOption = errorObject.errorInput();
                             break;
@@ -126,7 +135,7 @@ namespace Application
                 //terminates do while loop if input is 7
                 } while (menuOption != 7);
 
-               Session.endSession();
+               TeamSession.endSession();
 
             }
 
@@ -182,47 +191,48 @@ namespace Application
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:
-                            //To be approved section shows expenses made by teams
-                            Menu.ManagerMenu();
-                            Console.WriteLine("\n|>> TO BE APPROVED <<|\n");
-                            reportsObject.toBeApproved();
-                            menuOption = errorObject.errorInput();
-                            break;
-                        case 4:
                             //Notifications section. Nothing there yet but its coming
                             Menu.ManagerMenu();
                             Console.WriteLine("\n|>> NOTIFICATIONS <<|\n");
-                            Console.WriteLine(">> You have no messages yet! <<");
+                            ManagerNotifications.getNotifications();
+                            Console.WriteLine("+ new message >> ");
+                            string newMessage = Console.ReadLine();
+                            if (newMessage == "+")
+                            {
+                                managerNotifications.Notifications();
+                            }
                             menuOption = errorObject.errorInput();
                             break;
-                        case 5:
+                        case 4:
                             //manager profile allows the to view profile details and make changes
                             Menu.ManagerMenu();
                             Console.WriteLine("\n|>> PROFILE <<|\n");
                             managerObject.getManagerProfile();
-                            managerObject.getManagerLogin();
+                            //managerObject.getManagerLogin();
                             managerObject.updateProfile();
                             Menu.ManagerMenu();
                             menuOption = errorObject.errorInput();
                             break;
-                        case 6:
+                        case 5:
                             Menu.ManagerMenu();
                             Console.WriteLine("\n|>> TEAMS <<|\n");
                             teams.getDepartment();
                             Console.WriteLine("Department: >>");
                             string department = Console.ReadLine();
                             session.setSession(department);
-                            menuOption = errorObject.errorInput();
+                            teams.getTeamProfile();
+                            teams.getTeamLogin();
+                            teams.updateProfile();
+                            TeamSession.endSession();
                             //if statement goes to team view if input is more than 6
-
-                    menuOption = errorObject.errorInput();
-                    break;
+                            menuOption = errorObject.errorInput();
+                            break;
                     }
 
                 //while statement in do while loop. terminates the loop if 'menuOption' is 7
-                } while (menuOption != 7);
+                } while (menuOption != 6);
 
-                Session.endSession();
+                TeamSession.endSession();
             }
 
 

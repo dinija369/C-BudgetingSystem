@@ -66,7 +66,7 @@ namespace System2
             moneyObject.RemainingBalance(i);
             //current date saved to a date variable
             string date = DateTime.Now.ToString("dd/MM/yyyy");
-            string department = Session.getSession();
+            string department = TeamSession.getSession();
             setExpense(department, expenseMoney, expenseComment, date);
         }
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Numerics;
+using System.Runtime.Intrinsics.Arm;
 using System.Xml.Linq;
 using System2;
 
@@ -9,6 +10,7 @@ namespace Application
 	public class ManagerProfile
 	{
         ErrorInput errorObject = new ErrorInput();
+        ManagerSession session = new ManagerSession();
 
         private string password;
         private string username;
@@ -64,14 +66,8 @@ namespace Application
                 username = Console.ReadLine();
                 length = username.Length;
             }
-            //saves password and username in lists to be used for profile access
-            Password.Add(password);
-            Username.Add(username);
-            //saves placeholders in a list while there are no values
-            Name.Add("None");
-            Surname.Add("None");
-            Email.Add("None");
-            Phone.Add("None");
+
+            session.setSession(username);
 
             setManagerLogin(username, password);
         }
@@ -126,34 +122,55 @@ namespace Application
             //collects phone number
             Console.WriteLine("Phone number >> ");
             string phone = Console.ReadLine();
-            Console.WriteLine("Username* >> ");
-            username = Console.ReadLine();
-
-            //replaces the placeholders in the lists with  user input values from profile section in main
-            Name.Insert(0, name);
-            Surname.Insert(0, surname);
-            Email.Insert(0, email);
-            Phone.Insert(0, phone);
+            string username = ManagerSession.getSession();
 
             setManagerProfile(username, name, surname, email, phone);
         }
         //prints manager account details in profile section in main case 5
         public void getManagerProfile()
         {
-            Console.WriteLine("Name: " + Name[0]);
-            Console.WriteLine("Surname: " + Surname[0]);
-            Console.WriteLine("Email: " + Email[0]);
-            Console.WriteLine("Phone: " + Phone[0]);
-        }
+            string username = ManagerSession.getSession();
 
-        //gets team username in null position to print in manager profile for profile in main case 5
-        public void getManagerLogin()
-        {
-            Console.WriteLine("Username: " + Username[0]);
+            string connString = ConnectionString.Connection();
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+
+            string query = "SELECT [Username], [Name], [Surname], [Email], [Phone] FROM dbo.Manager_profile WHERE [Username] = @username";
+
+            SqlCommand command = new SqlCommand(query, connection);
+
+            command.Parameters.AddWithValue("@username", username);
+
+            SqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                Console.WriteLine(" ________________________________________ ");
+                Console.WriteLine("|Username: {0, -40}\n", reader.GetString(0));
+                Console.WriteLine("|________________________________________|");
+                Console.WriteLine(" ________________________________________ ");
+                Console.WriteLine("|Name: {0, -40}\n", reader.GetString(1));
+                Console.WriteLine("|________________________________________|");
+                Console.WriteLine(" ________________________________________ ");
+                Console.WriteLine("|Surname: {0, -40}\n", reader.GetString(2));
+                Console.WriteLine("|________________________________________|");
+                Console.WriteLine(" ________________________________________ ");
+                Console.WriteLine("|Email: {0, -40}\n", reader.GetString(3));
+                Console.WriteLine("|________________________________________|");
+                Console.WriteLine(" ________________________________________ ");
+                Console.WriteLine("|Phone: {0, -40}\n", reader.GetString(4));
+                Console.WriteLine("|________________________________________|");
+            }
         }
 
         public void updateProfile()
         {
+            string username = ManagerSession.getSession();
+
+            string connString = ConnectionString.Connection();
+            SqlConnection connection = new SqlConnection(connString);
+            connection.Open();
+
             Console.WriteLine("\nChange:\n1 Name | 2 Surname | 3 Email | 4 Phone number | 5 Password | 6 Username | 7 Exit\n>>");
             updateDetails = errorObject.errorInput();
             do
@@ -166,7 +183,13 @@ namespace Application
                         //Name
                         Console.WriteLine("Please enter the new name >> ");
                         string newName = Console.ReadLine();
-                        Name.Insert(0, newName);
+                        string queryName = "UPDATE dbo.Manager_profile SET [Name] = @name WHERE [Username] = @username";
+                        SqlCommand commandName = new SqlCommand(queryName, connection);
+                        commandName.Parameters.AddWithValue("@username", username);
+                        commandName.Parameters.AddWithValue("@name", newName);
+                        SqlDataReader readerSupervisor = commandName.ExecuteReader();
+                        connection.Close();
+                        //Name.Insert(0, newName);
                         Console.WriteLine("-- Name has been updated succsesfully --");
                         //will check for a good input and go to update another detail if the user chooses so
                         updateDetails = errorObject.errorInput();
@@ -175,7 +198,13 @@ namespace Application
                         //Surname
                         Console.WriteLine("Please enter the new surname >> ");
                         string newSurname = Console.ReadLine();
-                        Username.Insert(0, newSurname);
+                        string querySurname = "UPDATE dbo.Manager_profile SET [Surname] = @surname WHERE [Username] = @username";
+                        SqlCommand commandSurname = new SqlCommand(querySurname, connection);
+                        commandSurname.Parameters.AddWithValue("@username", username);
+                        commandSurname.Parameters.AddWithValue("@surname", newSurname);
+                        SqlDataReader readerSurname = commandSurname.ExecuteReader();
+                        connection.Close();
+                        //Username.Insert(0, newSurname);
                         Console.WriteLine("-- Surname has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -183,7 +212,13 @@ namespace Application
                         //Email
                         Console.WriteLine("Please enter the new email >> ");
                         string newEmail = Console.ReadLine();
-                        Username.Insert(0, newEmail);
+                        string queryEmail = "UPDATE dbo.Manager_profile SET [Email] = @email WHERE [Username] = @username";
+                        SqlCommand commandEmail = new SqlCommand(queryEmail, connection);
+                        commandEmail.Parameters.AddWithValue("@username", username);
+                        commandEmail.Parameters.AddWithValue("@email", newEmail);
+                        SqlDataReader readerEmail = commandEmail.ExecuteReader();
+                        connection.Close();
+                        //Username.Insert(0, newEmail);
                         Console.WriteLine("-- Email has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -192,7 +227,13 @@ namespace Application
                         //Phone number
                         Console.WriteLine("Please enter the new phone number >> ");
                         string newPhone = Console.ReadLine();
-                        Phone.Insert(0, newPhone);
+                        string queryPhone = "UPDATE dbo.Manager_profile SET [Phone] = @phone WHERE [Username] = @username";
+                        SqlCommand commandPhone = new SqlCommand(queryPhone, connection);
+                        commandPhone.Parameters.AddWithValue("@username", username);
+                        commandPhone.Parameters.AddWithValue("@phone", newPhone);
+                        SqlDataReader readerPhone = commandPhone.ExecuteReader();
+                        connection.Close();
+                        //Phone.Insert(0, newPhone);
                         Console.WriteLine("-- Phone number has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -200,7 +241,13 @@ namespace Application
                         //Password
                         Console.WriteLine("Please enter the new password >> ");
                         string newPassword = Console.ReadLine();
-                        Password.Insert(0, newPassword);
+                        string queryPassword = "UPDATE dbo.Manager_login SET [Password] = @password WHERE [Username] = @username";
+                        SqlCommand commandPassword = new SqlCommand(queryPassword, connection);
+                        commandPassword.Parameters.AddWithValue("@username", username);
+                        commandPassword.Parameters.AddWithValue("@name", newPassword);
+                        SqlDataReader readerPassword = commandPassword.ExecuteReader();
+                        connection.Close();
+                        //Password.Insert(0, newPassword);
                         Console.WriteLine("-- Password has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -208,7 +255,13 @@ namespace Application
                         //User name
                         Console.WriteLine("Please enter the new username >> ");
                         string newUsername = Console.ReadLine();
-                        Username.Insert(0, newUsername);
+                        string queryUsername = "UPDATE dbo.Manager_profile SET [Username] = @username WHERE [Username] = @username";
+                        SqlCommand commandUsername = new SqlCommand(queryUsername, connection);
+                        commandUsername.Parameters.AddWithValue("@username", username);
+                        commandUsername.Parameters.AddWithValue("@username", newUsername);
+                        SqlDataReader readerUsername = commandUsername.ExecuteReader();
+                        connection.Close();
+                        //Username.Insert(0, newUsername);
                         Console.WriteLine("-- Username has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;

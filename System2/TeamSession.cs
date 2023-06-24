@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace System2
 {
-    internal class Session
+    internal class TeamSession
     {
         public void setSession(string dep)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "INSERT INTO dbo.Session ([Department]) VALUES (@department)";
+            string query = "INSERT INTO dbo.Team_session ([Department]) VALUES (@department)";
 
             SqlCommand command = new SqlCommand(query, connection);
 
@@ -27,10 +27,10 @@ namespace System2
 
         public static void endSession()
         {
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "DELETE FROM dbo.Session";
+            string query = "DELETE FROM dbo.Team_session";
 
             SqlCommand command = new SqlCommand(query, connection);
 
@@ -43,10 +43,10 @@ namespace System2
         {
             string dep;
 
-            string connString = "Server = DESKTOP-LQ2RF0O\\SQLEXPRESS; Database = BudgetManager; Trusted_Connection = True;";
+            string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "SELECT [Department] FROM dbo.Session";
+            string query = "SELECT [Department] FROM dbo.Team_session";
 
             SqlCommand command = new SqlCommand(query, connection);
 

@@ -6,7 +6,7 @@ namespace Application
 {
     public class TeamProfile
     {
-        Session session = new Session();
+        TeamSession session = new TeamSession();
 
         //todo - merge login and profile and make the profile options possible to be null
         private static void setTeamProfile(string dep, string sup)
@@ -107,7 +107,7 @@ namespace Application
                 length = use.Length;
             }
 
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
             //passes the department, username and password parameters to the method that will save them in database
             SetTeamLogin(dep, use, pass);
         }

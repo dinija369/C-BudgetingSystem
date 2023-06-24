@@ -23,7 +23,7 @@ namespace Application
 		//gets team department and supervisor in null position to print in team infor in main case 6
 		public void getTeamProfile()
 		{
-			string dep = Session.getSession();
+			string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -49,7 +49,7 @@ namespace Application
         //gets team username in null position to print in team for profile in main case 6
         public void getTeamLogin()
         {
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -70,9 +70,9 @@ namespace Application
             }
         }
 		//offers the user to update details in main - case 6. 
-		public void updateProfile(int i)
+		public void updateProfile()
 		{
-            string dep = Session.getSession();
+            string dep = TeamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -152,7 +152,7 @@ namespace Application
 
             while (reader.Read())
             {
-                Console.WriteLine("|\n", reader.GetString(0));
+                Console.WriteLine("|" + reader.GetString(0) + "\n");
             }
         }
 
