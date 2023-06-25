@@ -2,7 +2,7 @@
 
 namespace Application
 {
-	class Menu
+	class DisplayMenu
 	{
         //prints a prompt to choose manager or team view
         public static void TeamManagerChoice()

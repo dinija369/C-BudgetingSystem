@@ -6,24 +6,18 @@ using System2;
 namespace Application
 {
 
-	public class Teams
+	public class DisplayUpdateTeamProfile
 	{
-        ErrorInput errorObject = new ErrorInput();
-        //aray lists holding password, username, department and supervisor variables for teams that are entered at the beginning and will be used TODO!!!!!!
-        private List<string> Password = new List<string>();
-		private List<string> Username = new List<string>();
+        SwitchCaseNavigation errorObject = new SwitchCaseNavigation();
+        TeamSession teamSession = new TeamSession();
 
         int updateDetails;
-        private string department;
-        private string supervisor;
-        private string password;
-        private string username;
 
 
-		//gets team department and supervisor in null position to print in team infor in main case 6
+		//gets team department and supervisor to print in team infor in main case 6
 		public void getTeamProfile()
 		{
-			string dep = TeamSession.getSession();
+			string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -32,7 +26,7 @@ namespace Application
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -45,11 +39,13 @@ namespace Application
                 Console.WriteLine("|Supervisor: {0, -40}\n", reader.GetString(1));
                 Console.WriteLine("|________________________________________|");
             }
-		}
-        //gets team username in null position to print in team for profile in main case 6
+
+            connection.Close();
+        }
+        //gets team username to print in team for profile in main case 6
         public void getTeamLogin()
         {
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -58,7 +54,7 @@ namespace Application
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -68,11 +64,13 @@ namespace Application
                 Console.WriteLine("|Username: {0, -40}\n", reader.GetString(0));
                 Console.WriteLine("|________________________________________|");
             }
+
+            connection.Close();
         }
 		//offers the user to update details in main - case 6. 
 		public void updateProfile()
 		{
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -84,18 +82,16 @@ namespace Application
 			{
 				switch (updateDetails)
 				{
-					//each case represents one update. the new detail is collected in a string variable and inserted in the list in null position to replace
-					//the old detail.
+					//each case represents one update
 					case 1:
                         Console.WriteLine("Please enter the new supervisor >> ");
                         string newSupervisor = Console.ReadLine();
                         string querySupervisor = "UPDATE dbo.Team_profile SET [Supervisor] = @supervisor WHERE [Department] = @dep";
                         SqlCommand commandSupervisor = new SqlCommand(querySupervisor, connection);
-                        commandSupervisor.Parameters.AddWithValue("@dep", dep);
+                        commandSupervisor.Parameters.AddWithValue("@dep", department);
                         commandSupervisor.Parameters.AddWithValue("@supervisor", newSupervisor);
                         SqlDataReader readerSupervisor = commandSupervisor.ExecuteReader();
                         connection.Close();
-                        //Department.Insert(i, newSupervisor);
                         Console.WriteLine("-- Supervisor has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -104,11 +100,10 @@ namespace Application
                         string newPassword = Console.ReadLine();
                         string queryPassword = "UPDATE dbo.Team_login SET [Password] = @password WHERE [Department] = @dep";
                         SqlCommand commandPassword = new SqlCommand(queryPassword, connection);
-                        commandPassword.Parameters.AddWithValue("@dep", dep);
+                        commandPassword.Parameters.AddWithValue("@dep", department);
                         commandPassword.Parameters.AddWithValue("@password", newPassword);
                         SqlDataReader readerPassword = commandPassword.ExecuteReader();
                         connection.Close();
-                        //Department.Insert(i, newPassword);
                         Console.WriteLine("-- Password has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -117,28 +112,22 @@ namespace Application
                         string newUser = Console.ReadLine();
                         string queryUser = "UPDATE dbo.Team_login SET [Username] = @user WHERE [Department] = @dep";
                         SqlCommand commandUser = new SqlCommand(queryUser, connection);
-                        commandUser.Parameters.AddWithValue("@dep", dep);
+                        commandUser.Parameters.AddWithValue("@dep", department);
                         commandUser.Parameters.AddWithValue("@user", newUser);
                         SqlDataReader readerUser = commandUser.ExecuteReader();
                         connection.Close();
-                        //Department.Insert(i, newUsername);
                         Console.WriteLine("-- Username has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
 				}
-				//if update details choice is larger than 5 it will keep asking for input till it is valid
 				if (updateDetails > 4)
 				{
 					Console.WriteLine("\n*** Unrecognised input! ***\n");
                     updateDetails = errorObject.errorInput();
                 }
-			//will end the whileloop if 5 is selecetd as that is an exit number
 			} while (updateDetails != 4);
         }
 
-		/// //////////////In manager mode//////////////////////////////////////////////////////////////////////////////////////////////////
-		//loops through each department and assigns value starting from 7 to each department. This will be printed in manager mode home screen every time a new team is added
-		//the number will be used to go to a specific teams profile from manager mode.
 		public void getDepartment()
 		{
             string connString = ConnectionString.Connection();
@@ -154,6 +143,8 @@ namespace Application
             {
                 Console.WriteLine("|" + reader.GetString(0) + "\n");
             }
+
+            connection.Close();
         }
 
 

@@ -10,18 +10,19 @@ namespace System2
 {
     internal class TeamNotifications
     {
-        public static void getNotifications()
+        TeamSession teamSession = new TeamSession();
+        public void getNotifications()
         {
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "SELECT [Message], [Sender] FROM dbo.Team_notifications WHERE [Department] = @dep";
+            string query = "SELECT [Message], [Sender] FROM dbo.Team_notifications WHERE [Department] = @department";
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@dep", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -33,9 +34,11 @@ namespace System2
                 Console.WriteLine("|Message: {0, -40}\n", reader.GetString(0));
                 Console.WriteLine("|________________________________________|");
             }
+
+            connection.Close();
         }
 
-        public void setNotification(string username, string message, string dep)
+        private void setNotification(string username, string message, string department)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -46,21 +49,22 @@ namespace System2
 
             command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@message", message);
-            command.Parameters.AddWithValue("@sender", dep);
+            command.Parameters.AddWithValue("@sender", department);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
+
+            connection.Close();
         }
 
         public void Notifications()
         {
-            string dep = TeamSession.getSession();
-            //todo - check if the username exists
+            string department = teamSession.getSession();
             Console.WriteLine("Username >> ");
             //collects department name from user
             string username = Console.ReadLine();
             Console.WriteLine("Message >> ");
             string message = Console.ReadLine();
-            setNotification(username, message, dep);
+            setNotification(username, message, department);
         }
     }
 }

@@ -13,14 +13,11 @@ namespace System2
 {
     internal class Expense
     {
-        Money moneyObject = new Money();
-        Reports reportsObject = new Reports();
+        AllowanceBalance moneyObject = new AllowanceBalance();
+        TeamSession teamSession = new TeamSession();
         float expenseMoney;
-        float expense = 0f;
-        float moneyLeft = 0f;
-        int i = 0;
 
-        private static void setExpense(string department, float expenseMoney, string expenseComment, string date)
+        private void setExpense(string department, float expenseMoney, string expenseComment, string date)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -34,12 +31,9 @@ namespace System2
             command.Parameters.AddWithValue("@comment", expenseComment);
             command.Parameters.AddWithValue("@date", date);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
 
-            /*while (reader.Read())
-            {
-                Console.WriteLine(reader.GetString(0) + " - " + reader.GetString(1) + " - " + reader.GetString(2));
-            }*/
+            connection.Close();
         }
         public void getExpense()
         {
@@ -60,13 +54,13 @@ namespace System2
             //comments for expense collected
             Console.WriteLine("Comments >> ");
             string expenseComment = Console.ReadLine();
-            //total spent is calculated, added to a list and returned after each expense
-            moneyObject.TotalSpent(expenseMoney, i);
-            //remaining balance is calculated after each expense added to a list and returned
-            moneyObject.RemainingBalance(i);
-            //current date saved to a date variable
+            //total spent is calculated
+            moneyObject.TotalSpent(expenseMoney);
+            //remaining balance is calculated after each expense
+            moneyObject.RemainingBalance();
+            //current date
             string date = DateTime.Now.ToString("dd/MM/yyyy");
-            string department = TeamSession.getSession();
+            string department = teamSession.getSession();
             setExpense(department, expenseMoney, expenseComment, date);
         }
 

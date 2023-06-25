@@ -10,10 +10,10 @@ using System.Runtime.Intrinsics.Arm;
 namespace Application
 {
 
-	public class Money
+	public class AllowanceBalance
 	{
-        TeamProfile profile = new TeamProfile();
-        ErrorInput error = new ErrorInput();
+        SwitchCaseNavigation error = new SwitchCaseNavigation();
+        TeamSession teamSession = new TeamSession();
 
         //collects allowance per person
         private float allowancePerPerson;
@@ -23,65 +23,50 @@ namespace Application
         private float allowancePerTeam;
         //date to and from variables
         string dateTo;
-        string dateFrom;
-        float a = 0f;
         Decimal totalSpentDb = 0;
         //used for total spent in Expense method
         private float totalSpent = 0f;
-        //string hashmap to store dates
-        private Dictionary<string, string> DateFromTo = new Dictionary<string, string>();
-        //list to store allowance that is added in each teams index place
-        private List<float> allowance = new List<float>();
-        //saves total money spent from Expense method each time new expense is added
-        private List<float> moneySpent = new List<float>();
-        //saves remaining balance by subtracting expense from balance each time
-        private List<float> remainingBalance = new List<float>();
 
-        //gets information about allowance for each team. per person, people in a team, date from to. calculates the allowance for the team and saves allowance in a 
-        //list and dates in a dictionary.
-
-        private static void updateAllowance(string dep, string date, string dateTo, float allowancePerTeam)
+        //updates allowance in the database
+        private static void updateAllowance(string department, string date, string dateTo, float allowancePerTeam)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "UPDATE dbo.Allowance_table SET [Allowance] = @allowance, [Date_from] = @date_from, [Date_to] = @date_to WHERE [Department] = @dep";
+            string query = "UPDATE dbo.Allowance_table SET [Allowance] = @allowance, [Date_from] = @date_from, [Date_to] = @date_to WHERE [Department] = @department";
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@department", department);
             command.Parameters.AddWithValue("@allowance", allowancePerTeam);
             command.Parameters.AddWithValue("@date_from", date);
             command.Parameters.AddWithValue("@date_to", dateTo);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
 
-            //updateBalance(dep, allowancePerTeam);
+            connection.Close();
 
         }
 
-        public void SetAllowance(string dep, string date, string dateTo, float allowancePerTeam)
+        private void SetAllowance(string department, string date, string dateTo, float allowancePerTeam)
         {
             try
             {
                 string connString = ConnectionString.Connection();
                 SqlConnection connection = new SqlConnection(connString);
                 connection.Open();
-                string query = "INSERT INTO dbo.Allowance_table ([Department], [Allowance], [Date_from], [Date_to]) VALUES (@dep, @allowance, @date_from, @date_to)";
+                string query = "INSERT INTO dbo.Allowance_table ([Department], [Allowance], [Date_from], [Date_to]) VALUES (@department, @allowance, @date_from, @date_to)";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@dep", dep);
+                command.Parameters.AddWithValue("@department", department);
                 command.Parameters.AddWithValue("@allowance", allowancePerTeam);
                 command.Parameters.AddWithValue("@date_from", date);
                 command.Parameters.AddWithValue("@date_to", dateTo);
 
-                SqlDataReader reader = command.ExecuteReader();
+                command.ExecuteReader();
 
-                /*while (reader.Read())
-                {
-                    Console.WriteLine(reader.GetString(0) + " - " + reader.GetString(1) + " - " + reader.GetString(2));
-                }*/
+                connection.Close();
             }
             catch 
             {
@@ -89,10 +74,8 @@ namespace Application
                 string updateAllowance = Console.ReadLine();
                 if (updateAllowance == "Y")
                 {
-                    int i = 0;
-                    Money.updateAllowance(dep, date, dateTo, allowancePerTeam);
-                    //TotalSpent();
-                    RemainingBalance(i);
+                    Application.AllowanceBalance.updateAllowance(department, date, dateTo, allowancePerTeam);
+                    RemainingBalance();
                 }
 
                 else
@@ -103,7 +86,7 @@ namespace Application
 
         }
 
-        public void Allowance(int i)
+        public void Allowance()
 		{
             //collects allowance per person
             while (true)
@@ -156,24 +139,18 @@ namespace Application
                 }
             }
 
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
-            //TO REMOVE
-            //ads both dates to a dictionary
-            //DateFromTo.Add(date, dateTo);
             //calculates the  allowance for each team based on people in the team and allowance per person
             allowancePerTeam = allowancePerPerson * peopleInTeam;
-            //inserts the allowance for each team in a position 0
-            allowance.Insert(i, allowancePerTeam);
-            //TO REMOVE
 
-            SetAllowance(dep, date, dateTo, allowancePerTeam);
+            SetAllowance(department, date, dateTo, allowancePerTeam);
         }
 
         public Decimal getAllowance()
         {
             Decimal allowance = 0;
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
 
@@ -183,7 +160,7 @@ namespace Application
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -202,13 +179,11 @@ namespace Application
 
         }
 
-        /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// ///////////////////////Total spent//////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Total Spent //
 
         public Decimal getTotalSpent()
         {
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -217,7 +192,7 @@ namespace Application
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -242,57 +217,57 @@ namespace Application
 
         }
 
-        private static void setTotalSpent(string dep, float totalSpent)
+        private static void setTotalSpent(string department, float totalSpent)
         {
             string connString = ConnectionString.Connection();  
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "UPDATE dbo.Allowance_table SET [Total_spent] = @totalSpent WHERE [Department] = @dep";
+            string query = "UPDATE dbo.Allowance_table SET [Total_spent] = @totalSpent WHERE [Department] = @department";
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@department", department);
             command.Parameters.AddWithValue("@totalSpent", totalSpent);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
+
+            connection.Close();
 
         }
 
-        public void TotalSpent(float expenseMoney, int i)
+        public void TotalSpent(float expenseMoney)
         {
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
             //total spent amount is gotten from adding new expense to total spent
             totalSpent += expenseMoney;
-            //total spent is saved to a list
-            moneySpent.Insert(i, totalSpent);
-            setTotalSpent(dep, totalSpent);
+            setTotalSpent(department, totalSpent);
         }
 
 
-        /// /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// //remaining balance ////////////////////////////////////////////////////////////////////////////////////////////////////
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Remaining Balance //
 
-        private static void setRemainingBalance(string dep, float newRemainingBalance)
+        private static void setRemainingBalance(string department, float newRemainingBalance)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
-            string query = "UPDATE dbo.Allowance_table SET [Money_left] = @balance WHERE [Department] = @dep";
+            string query = "UPDATE dbo.Allowance_table SET [Money_left] = @balance WHERE [Department] = @department";
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@dep", dep);
+            command.Parameters.AddWithValue("@department", department);
             command.Parameters.AddWithValue("@balance", newRemainingBalance);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
+
+            connection.Close();
 
         }
 
         public Decimal getRemainingBalance()
         {
             Decimal remainingBalance = 0;
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -301,7 +276,7 @@ namespace Application
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -327,11 +302,11 @@ namespace Application
         }
 
         //calculates the remaining balance after each expense made.
-        public void RemainingBalance(int i)
+        public void RemainingBalance()
         {
             float allowance = (float)getAllowance();
             float totalSpent = (float)getTotalSpent();
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
             //calculates remaining balance by substracting total spent from allowance
             float newRemainingBalance = allowance - totalSpent;
             //if allowance per team has been set
@@ -343,9 +318,7 @@ namespace Application
                     Console.WriteLine("*** You have exceeded your budget! ***\n");
                 }
             }
-            //ads new remaining balance to a list after each calculation
-            remainingBalance.Insert(i, newRemainingBalance);
-            setRemainingBalance(dep, newRemainingBalance);
+            setRemainingBalance(department, newRemainingBalance);
         }
 
     }

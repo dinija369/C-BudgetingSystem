@@ -7,20 +7,15 @@ namespace Application
 {
 	public class Reports
 	{
-		//lists to keep date, comment and money spent for each eneterd expense
-		private List<string> date = new List<string>();
-        private List<string> comments = new List<string>();
-        private List<float> moneySpent = new List<float>();
-
-        Money moneyObject = new Money();
+        AllowanceBalance moneyObject = new AllowanceBalance();
+        TeamSession teamSession = new TeamSession();
 
 
-        //gets date, comments and money spent for each eneterd expense in main case 3. Ads date, comments and money spent to array lists.
-		//takes three arguments from the main class. These will be used in Report and toBeApproved methods.
+        //displays date, comments and money spent for each eneterd expense in main case 3. these are displayed in report section in team view
 
         public void getExpenseReport()
         {
-            string dep = TeamSession.getSession();
+            string department = teamSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -29,7 +24,7 @@ namespace Application
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
 
@@ -39,6 +34,8 @@ namespace Application
                 Console.WriteLine("|{0, -20}|{1, -40}|{2, 15}|\n", reader.GetDecimal(0), reader.GetString(1), reader.GetString(2));
                 Console.WriteLine("|____________________|________________________________________|_______________|");
             }
+
+            connection.Close();
 
         }
 
@@ -53,15 +50,5 @@ namespace Application
             Console.WriteLine("|____________________|\n");
         }
 
-		public void toBeApproved()
-		{
-			for (int i = 0; i < date.Count(); i++)
-			{
-				//the date, comments, and money spent is gotten for each entered expense
-				Console.WriteLine(" ____________________ ________________________________________ _______________ ");
-				Console.WriteLine("|{0, -20}|{1, -40}|{2, 15}|\n", date[i], comments[i], moneySpent[i]);
-				Console.WriteLine("|____________________|________________________________________|_______________|");
-			}
-		}
 	}
 }

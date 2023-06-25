@@ -9,9 +9,10 @@ namespace System2
 {
     internal class ManagerNotifications
     {
-        public static void getNotifications()
+        ManagerSession managerSession = new ManagerSession();
+        public void getNotifications()
         {
-            string username = ManagerSession.getSession();
+            string username = managerSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -32,9 +33,11 @@ namespace System2
                 Console.WriteLine("|Message: {0, -40}\n", reader.GetString(0));
                 Console.WriteLine("|________________________________________|");
             }
+
+            connection.Close();
         }
 
-        public void setNotification(string department, string message, string username)
+        private void setNotification(string department, string message, string username)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -47,12 +50,14 @@ namespace System2
             command.Parameters.AddWithValue("@message", message);
             command.Parameters.AddWithValue("@sender", username);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
+
+            connection.Close();
         }
 
         public void Notifications()
         {
-            string username = ManagerSession.getSession();
+            string username = managerSession.getSession();
             //todo - check if the username exists
             Console.WriteLine("Department >> ");
             //collects department name from user

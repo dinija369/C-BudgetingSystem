@@ -9,7 +9,7 @@ namespace System2
 {
     internal class TeamSession
     {
-        public void setSession(string dep)
+        public void setSession(string department)
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -18,14 +18,14 @@ namespace System2
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            command.Parameters.AddWithValue("@department", dep);
+            command.Parameters.AddWithValue("@department", department);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
 
             connection.Close();
         }
 
-        public static void endSession()
+        public void endSession()
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -34,14 +34,14 @@ namespace System2
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
 
             connection.Close();
         }
 
-        public static string getSession()
+        public string getSession()
         {
-            string dep;
+            string department;
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -54,12 +54,12 @@ namespace System2
 
             reader.Read();
             
-            dep = reader.GetString(0);
+            department = reader.GetString(0);
             
 
             connection.Close();
 
-            return dep;
+            return department;
         }
     }
 }

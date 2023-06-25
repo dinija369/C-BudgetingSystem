@@ -9,25 +9,16 @@ namespace Application
 {
 	public class ManagerProfile
 	{
-        ErrorInput errorObject = new ErrorInput();
-        ManagerSession session = new ManagerSession();
+        SwitchCaseNavigation errorObject = new SwitchCaseNavigation();
+        ManagerSession managerSession = new ManagerSession();
 
         private string password;
         private string username;
         int updateDetails;
 
-        //profile values for the manager stoerd in lists 
-        List<string> Password = new List<string>();
-        List<string> Username = new List<string>();
-        List<string> Name = new List<string>();
-        List<string> Surname = new List<string>();
-        List<string> Email = new List<string>();
-        List<string> Phone = new List<string>();
-
-        private static void setManagerLogin(string username, string password)
+        private void setManagerLogin(string username, string password)
         {
             string connString = ConnectionString.Connection();
-            //string query = "SELECT * FROM dbo.users";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             //
@@ -38,25 +29,24 @@ namespace Application
             command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@password", password);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
+
+            connection.Close();
         }
 
-        //prompts the user to enter password and username, scans the entry and stores data in lists
+        //prompts the user to enter password and username
         public void ManagerLogin()
 		{
             Console.WriteLine("\n>> Please enter Username and password <<");
             Console.WriteLine("\nPassword* (at least 2 characters) >> ");
             password = Console.ReadLine();
-            //puts the length of password string in integer variable
             int length = password.Length;
-            //while loop: checks if the password is too short and keeps repeating the code as long as it is too short
             while (length < 2)
             {
                 Console.WriteLine("*** Passsword is too short ***\nPlease try again >> ");
                 password = Console.ReadLine();
                 length = password.Length;
             }
-            //the same process repeated with username
             Console.WriteLine("Username* >> ");
             username = Console.ReadLine();
             length = username.Length;
@@ -67,15 +57,14 @@ namespace Application
                 length = username.Length;
             }
 
-            session.setSession(username);
+            managerSession.setSession(username);
 
             setManagerLogin(username, password);
         }
 
-        private static void setManagerProfile(string username, string name, string surname, string email, string phone)
+        private void setManagerProfile(string username, string name, string surname, string email, string phone)
         {
             string connString = ConnectionString.Connection();
-            //string query = "SELECT * FROM dbo.users";
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             //
@@ -89,7 +78,9 @@ namespace Application
             command.Parameters.AddWithValue("@email", email);
             command.Parameters.AddWithValue("@phone", phone);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
+
+            connection.Close();
         }
 
         public void managerProfile()
@@ -97,9 +88,7 @@ namespace Application
             Console.WriteLine("\n>> Create an account. <<\n");
             Console.WriteLine("Name* >> ");
             string name = Console.ReadLine();
-            //puts the length of name string in integer variable
             int length = name.Length;
-            //while loop checks if there is an input
             while (length < 1)
             {
                 Console.WriteLine("\nPlease enter your name >> ");
@@ -122,14 +111,14 @@ namespace Application
             //collects phone number
             Console.WriteLine("Phone number >> ");
             string phone = Console.ReadLine();
-            string username = ManagerSession.getSession();
+            string username = managerSession.getSession();
 
             setManagerProfile(username, name, surname, email, phone);
         }
         //prints manager account details in profile section in main case 5
         public void getManagerProfile()
         {
-            string username = ManagerSession.getSession();
+            string username = managerSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -161,11 +150,13 @@ namespace Application
                 Console.WriteLine("|Phone: {0, -40}\n", reader.GetString(4));
                 Console.WriteLine("|________________________________________|");
             }
+
+            connection.Close();
         }
 
         public void updateProfile()
         {
-            string username = ManagerSession.getSession();
+            string username = managerSession.getSession();
 
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -177,8 +168,7 @@ namespace Application
             {
                 switch (updateDetails)
                 {
-                    //each case represents one update. the new detail is collected in a string variable and inserted in the list in null position to replace
-                    //the old detail.
+                    //each case represents one update
                     case 1:
                         //Name
                         Console.WriteLine("Please enter the new name >> ");
@@ -189,9 +179,7 @@ namespace Application
                         commandName.Parameters.AddWithValue("@name", newName);
                         SqlDataReader readerSupervisor = commandName.ExecuteReader();
                         connection.Close();
-                        //Name.Insert(0, newName);
                         Console.WriteLine("-- Name has been updated succsesfully --");
-                        //will check for a good input and go to update another detail if the user chooses so
                         updateDetails = errorObject.errorInput();
                         break;
                     case 2:
@@ -204,7 +192,6 @@ namespace Application
                         commandSurname.Parameters.AddWithValue("@surname", newSurname);
                         SqlDataReader readerSurname = commandSurname.ExecuteReader();
                         connection.Close();
-                        //Username.Insert(0, newSurname);
                         Console.WriteLine("-- Surname has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -218,7 +205,6 @@ namespace Application
                         commandEmail.Parameters.AddWithValue("@email", newEmail);
                         SqlDataReader readerEmail = commandEmail.ExecuteReader();
                         connection.Close();
-                        //Username.Insert(0, newEmail);
                         Console.WriteLine("-- Email has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -233,7 +219,6 @@ namespace Application
                         commandPhone.Parameters.AddWithValue("@phone", newPhone);
                         SqlDataReader readerPhone = commandPhone.ExecuteReader();
                         connection.Close();
-                        //Phone.Insert(0, newPhone);
                         Console.WriteLine("-- Phone number has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -244,10 +229,9 @@ namespace Application
                         string queryPassword = "UPDATE dbo.Manager_login SET [Password] = @password WHERE [Username] = @username";
                         SqlCommand commandPassword = new SqlCommand(queryPassword, connection);
                         commandPassword.Parameters.AddWithValue("@username", username);
-                        commandPassword.Parameters.AddWithValue("@name", newPassword);
+                        commandPassword.Parameters.AddWithValue("@password", newPassword);
                         SqlDataReader readerPassword = commandPassword.ExecuteReader();
                         connection.Close();
-                        //Password.Insert(0, newPassword);
                         Console.WriteLine("-- Password has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
@@ -261,18 +245,15 @@ namespace Application
                         commandUsername.Parameters.AddWithValue("@username", newUsername);
                         SqlDataReader readerUsername = commandUsername.ExecuteReader();
                         connection.Close();
-                        //Username.Insert(0, newUsername);
                         Console.WriteLine("-- Username has been updated succsesfully --");
                         updateDetails = errorObject.errorInput();
                         break;
                 }
-                //if update details choice is larger than 7 it will keep asking for input till it is valid
                 if (updateDetails > 7)
                 {
                     Console.WriteLine("\n*** Unrecognised input! ***\n");
                     updateDetails = errorObject.errorInput();
                 }
-                //will end the whileloop if 7 is selecetd as that is an exit number
             } while (updateDetails != 7);
         }
 

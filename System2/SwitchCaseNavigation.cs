@@ -3,14 +3,13 @@
 namespace Application
 {
 
-	public class ErrorInput
+	public class SwitchCaseNavigation
 	{
 		//returns an integer that is used in the main to go to a corresponding case in a switch
 		int option;
 
 		public int errorInput()
 		{
-			//while loop to see if the user enters an integer when choosing a menu option. keeps repeating unless a valid menu option selecetd.
 			while (true)
 			{
 				try

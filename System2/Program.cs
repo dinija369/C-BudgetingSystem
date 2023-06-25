@@ -9,42 +9,37 @@ namespace Application
     {
         static void Main(string[] args)
         {
-            //class object constructors. object constructor is a function that can be called to create an object form a class
-            Teams teams = new Teams();
-            ErrorInput errorObject = new ErrorInput();
-            Money moneyObject = new Money();
+            //class object constructors
+            DisplayUpdateTeamProfile teams = new DisplayUpdateTeamProfile();
+            SwitchCaseNavigation errorObject = new SwitchCaseNavigation();
+            AllowanceBalance moneyObject = new AllowanceBalance();
             Reports reportsObject = new Reports();
             ManagerProfile managerObject = new ManagerProfile();
-            TeamProfile teamProfile = new TeamProfile();
+            SaveTeamProfile teamProfile = new SaveTeamProfile();
             Expense expenseObj = new Expense();
             TeamSession session = new TeamSession();
             TeamNotifications notification = new TeamNotifications();
             ManagerNotifications managerNotifications = new ManagerNotifications();
+            TeamAuthentication teamAuthentication = new TeamAuthentication();
+            ManagerAuthentication managerAuthentication = new ManagerAuthentication();
+            ManagerSession managerSession = new ManagerSession();
             
 
-            //integer array declarations
             //used for the user to choose manager or team mode. if array takes 1 as an input - team mode accessed, 2 - manager mode
             int managerTeamView;
-            //used to got ot menu option 1 which is a home page in a switch satemenet
+            //used to get to menu option 1 which is a home page in a switch satemenet
             int menuOption;
-            //used to print allowance, expense and money left information on the home page for team view. gotten from TODO!!!!!!!!!!
-            float allowance = 0f;
-            float expense = 0f;
-            float moneyLeft = 0f;
             float expenseMoney;
-            int i = 0;
             int registerLogin;
 
-            //while loop keeps looping if the input is not integer and printing the error message from the catch block
             while (true)
             {
                 try
                 {
                     //'Menu' class method. prints a prompt for team or manager view
-                    Menu.TeamManagerChoice();
+                    DisplayMenu.TeamManagerChoice();
                     //scanner object takes manager or team view input
                     managerTeamView = Convert.ToInt32(Console.ReadLine());
-                    //breaks out of the loop if there is no error
                     break;
                 }catch (Exception ex)
                 {
@@ -53,14 +48,37 @@ namespace Application
 
             }
 
-            //if statement checks the user input and runs the corresponding code
             if (managerTeamView == 1)
             {
-                //'Teams' class method. prompts the user for profile details and saves them in arraylist
-                teamProfile.Profile();
+                while (true)
+                {
+                    try
+                    {
+                        DisplayMenu.RegisterOrLogin();
+                        registerLogin = Convert.ToInt32(Console.ReadLine());
+                        break;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("*** Input not recognised ***\nType 1 to Register or 2 to Log in");
 
-                teamProfile.Login();
-                //will jump to the first condition in below switch statement
+                    }
+                }
+                //1 = register
+                if (registerLogin == 1)
+                {
+                    //'Teams' class method. prompts the user for profile details
+                    teamProfile.RegisterProfile();
+
+                    teamProfile.RegisterLogin();
+                }
+
+                else
+                {
+                    //prompts the user for password and username and check if they are available in the database
+                    teamAuthentication.Login();
+                }
+                
                 menuOption = 1;
 
                 do
@@ -69,32 +87,30 @@ namespace Application
                     {
                         case 1:
                             //prints home menu for team mode
-                            Menu.TeamMenu();
+                            DisplayMenu.TeamMenu();
                             Console.WriteLine("\n|>> HOME <<|\n");
                             //prints the current allowance, expense and money left. allowance is taken from case 2. expense and money left is taken from case 3
-                            //todo - add option to update allowance as currently it will not allow it because of primary key valiation
                             moneyObject.getAllowance();
                             moneyObject.getTotalSpent();
                             moneyObject.getRemainingBalance();
-                            //checks the case choice to go to another menu item for errors
                             menuOption = errorObject.errorInput();
                             break;
                         case 2:
-                            Menu.TeamMenu();
+                            DisplayMenu.TeamMenu();
                             Console.WriteLine("\n|>> ADD ALLOWANCE <<|\n");
                             //allows a user to set allowance for the team
-                            moneyObject.Allowance(i = 0);
+                            moneyObject.Allowance();
                             //returns allowance from the setAloowance method above that is stored in allowance variable and printed in home screen.
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:
-                            Menu.TeamMenu();
+                            DisplayMenu.TeamMenu();
                             Console.WriteLine("\n|>> ADD EXPENSE <<|\n");
                             expenseObj.getExpense();
                             menuOption = errorObject.errorInput();
                             break;
                         case 4:
-                            Menu.TeamMenu();
+                            DisplayMenu.TeamMenu();
                             Console.WriteLine("\n|>> REPORTS <<|\n");
                             //gets the report and passes expense and remaining balance arguments to print in the report
                             reportsObject.getExpenseReport();
@@ -102,10 +118,10 @@ namespace Application
                             menuOption = errorObject.errorInput();
                             break;
                         case 5:
-                            //todo - notifications
-                            Menu.TeamMenu();
+                            //notifications
+                            DisplayMenu.TeamMenu();
                             Console.WriteLine("\n|>> NOTIFICATIONS <<|\n");
-                            TeamNotifications.getNotifications();
+                            notification.getNotifications();
                             Console.WriteLine("+ new message >> ");
                             string newMessage = Console.ReadLine();
                             if (newMessage == "+")
@@ -122,20 +138,18 @@ namespace Application
                             teams.getTeamLogin();
                             //can update all profile details one by one
                             teams.updateProfile();
-                            Menu.TeamMenu();
+                            DisplayMenu.TeamMenu();
                             menuOption = errorObject.errorInput();
                             break;
                     }
-                    //if statement prints error message and goes to home page if input more than 7
                     if (menuOption > 7)
                     {
                         Console.WriteLine("\n*** Unrecognised input! ***\n");
                         menuOption = 1;
                     }
-                //terminates do while loop if input is 7
                 } while (menuOption != 7);
 
-               TeamSession.endSession();
+               session.endSession();
 
             }
 
@@ -146,7 +160,7 @@ namespace Application
                 {
                     try
                     {
-                        Menu.RegisterOrLogin();
+                        DisplayMenu.RegisterOrLogin();
                         registerLogin = Convert.ToInt32(Console.ReadLine());
                         break;
                     }
@@ -156,19 +170,19 @@ namespace Application
 
                     }
                 }
-                //if statement runs a block of code if input is 1. 1 = register
+                //1 = register
                 if (registerLogin == 1)
                 {
-                    //prompts the user for password and username and saves them in string array list for manager profile
+                    //prompts the user for password and username
                     managerObject.ManagerLogin();
-                    //prompts the user for name, surname, email and phone and saves them in string list for manager profile
+                    //prompts the user for name, surname, email and phone
                     managerObject.managerProfile();
                 }
 
                 else
                 {
-                    //prompts the user for password and username and saves them in string array list for manager profile
-                    managerObject.ManagerLogin();
+                    //prompts the user for password and username and checks if it is in the database
+                    managerAuthentication.Login();
                 }
 
                 menuOption = 1;
@@ -178,23 +192,23 @@ namespace Application
                     switch (menuOption)
                     {
                         case 1:
-                            Menu.ManagerMenu();
+                            DisplayMenu.ManagerMenu();
                             Console.WriteLine("\n|>> HOME <<|\n");
                             menuOption = errorObject.errorInput();
                             break;
                         case 2:
                             //allows the manager to add teams
-                            Menu.ManagerMenu();
+                            DisplayMenu.ManagerMenu();
                             Console.WriteLine("\n|>> ADD TEAMS <<|\n");
-                            teamProfile.Profile();
-                            teamProfile.Login();
+                            teamProfile.RegisterProfile();
+                            teamProfile.RegisterLogin();
                             menuOption = errorObject.errorInput();
                             break;
                         case 3:
-                            //Notifications section. Nothing there yet but its coming
-                            Menu.ManagerMenu();
+                            //Notifications section
+                            DisplayMenu.ManagerMenu();
                             Console.WriteLine("\n|>> NOTIFICATIONS <<|\n");
-                            ManagerNotifications.getNotifications();
+                            managerNotifications.getNotifications();
                             Console.WriteLine("+ new message >> ");
                             string newMessage = Console.ReadLine();
                             if (newMessage == "+")
@@ -205,16 +219,15 @@ namespace Application
                             break;
                         case 4:
                             //manager profile allows the to view profile details and make changes
-                            Menu.ManagerMenu();
+                            DisplayMenu.ManagerMenu();
                             Console.WriteLine("\n|>> PROFILE <<|\n");
                             managerObject.getManagerProfile();
-                            //managerObject.getManagerLogin();
                             managerObject.updateProfile();
-                            Menu.ManagerMenu();
+                            DisplayMenu.ManagerMenu();
                             menuOption = errorObject.errorInput();
                             break;
                         case 5:
-                            Menu.ManagerMenu();
+                            DisplayMenu.ManagerMenu();
                             Console.WriteLine("\n|>> TEAMS <<|\n");
                             teams.getDepartment();
                             Console.WriteLine("Department: >>");
@@ -223,16 +236,13 @@ namespace Application
                             teams.getTeamProfile();
                             teams.getTeamLogin();
                             teams.updateProfile();
-                            TeamSession.endSession();
-                            //if statement goes to team view if input is more than 6
+                            session.endSession();
                             menuOption = errorObject.errorInput();
                             break;
                     }
-
-                //while statement in do while loop. terminates the loop if 'menuOption' is 7
                 } while (menuOption != 6);
 
-                TeamSession.endSession();
+                managerSession.endSession();
             }
 
 

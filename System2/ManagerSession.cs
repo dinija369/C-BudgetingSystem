@@ -20,12 +20,12 @@ namespace System2
 
             command.Parameters.AddWithValue("@username", username);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
 
             connection.Close();
         }
 
-        public static void endSession()
+        public void endSession()
         {
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
@@ -34,12 +34,12 @@ namespace System2
 
             SqlCommand command = new SqlCommand(query, connection);
 
-            SqlDataReader reader = command.ExecuteReader();
+            command.ExecuteReader();
 
             connection.Close();
         }
 
-        public static string getSession()
+        public string getSession()
         {
             string username;
 
