@@ -14,23 +14,27 @@ namespace Application
         private void setTeamProfile(string department, string supervisor)
         {
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Team_profile ([Department], [Supervisor]) VALUES (@department, @supervisor)";
-
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
 
             command.Parameters.AddWithValue("@department", department);
             command.Parameters.AddWithValue("@supervisor", supervisor);
 
-            command.ExecuteReader();
-
+            try
+            {
+                command.ExecuteReader();
+            } catch (SqlException) 
+            { 
+                Console.WriteLine("Department is already taken\nPlease choose a different one\n>>  ");
+                RegisterProfile();
+            }
             connection.Close();
         }
 
         public void RegisterProfile()
         {
-
             Console.WriteLine("\n>> Create a team <<\n");
             Console.WriteLine("Department* >> ");
             //collects department name from user
@@ -42,7 +46,6 @@ namespace Application
                 dep = Console.ReadLine();
                 length = dep.Length;
             }
-
             //collects the suprevisor name for the department
             Console.WriteLine("Supervisor >> ");
             string sup = Console.ReadLine();
@@ -54,18 +57,16 @@ namespace Application
         private void SetTeamLogin(string department, string username, string password)
         {
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Team_login ([Department], [Username], [Password]) VALUES (@department, @username, @password)";
-
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
 
             command.Parameters.AddWithValue("@department", department);
             command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@password", password);
 
             command.ExecuteReader();
-
             connection.Close();
 
         }
@@ -93,13 +94,9 @@ namespace Application
                 username = Console.ReadLine();
                 length = username.Length;
             }
-
             string department = teamSession.getSession();
             //passes the department, username and password parameters to the method that will save them in database
             SetTeamLogin(department, username, password);
         }
-
     }
-
-
 }

@@ -15,13 +15,11 @@ namespace System2
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Manager_session ([Username]) VALUES (@username)";
-
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@username", username);
 
             command.ExecuteReader();
-
             connection.Close();
         }
 
@@ -31,7 +29,6 @@ namespace System2
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "DELETE FROM dbo.Manager_session";
-
             SqlCommand command = new SqlCommand(query, connection);
 
             command.ExecuteReader();
@@ -42,20 +39,16 @@ namespace System2
         public string getSession()
         {
             string username;
-
             string connString = ConnectionString.Connection();
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "SELECT [Username] FROM dbo.Manager_session";
-
             SqlCommand command = new SqlCommand(query, connection);
 
             SqlDataReader reader = command.ExecuteReader();
 
             reader.Read();
-
             username = reader.GetString(0);
-
 
             connection.Close();
 

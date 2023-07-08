@@ -12,7 +12,7 @@ namespace System2
     {
         private void CheckLogin(string username, string EnteredPassword)
         {
-            TeamSession session = new TeamSession();
+            TeamSession teamSession = new();
             string password;
             int updateDetails;
             int LoginExit = 0;
@@ -21,48 +21,35 @@ namespace System2
             {
                 try
                 {
-
                     string connString = ConnectionString.Connection();
-                    SqlConnection connection = new SqlConnection(connString);
+                    SqlConnection connection = new(connString);
                     connection.Open();
                     string query = "SELECT [Password] FROM dbo.Team_login WHERE [Username] = @username";
-
-                    SqlCommand command = new SqlCommand(query, connection);
+                    SqlCommand command = new(query, connection);
 
                     command.Parameters.AddWithValue("@username", username);
 
                     SqlDataReader reader = command.ExecuteReader();
-
                     reader.Read();
-
                     password = reader.GetString(0);
-
                     connection.Close();
 
                     if (password == EnteredPassword)
                     {
                         connection.Open();
-
                         query = "SELECT [Department] FROM dbo.Team_login WHERE [Username] = @username";
-
                         command = new SqlCommand(query, connection);
 
                         command.Parameters.AddWithValue("@username", username);
 
                         reader = command.ExecuteReader();
-
                         reader.Read();
-
                         string department = reader.GetString(0);
-
-                        session.setSession(department);
+                        teamSession.setSession(department);
                         connection.Close();
-
                         LoginExit = 2;
-
                     }
                 }
-
                 catch
                 {
                     Console.WriteLine("Wrong password and/ or username!\n| 1. Try again | 2. Exit |");
@@ -72,14 +59,12 @@ namespace System2
                         Login();
                         LoginExit = 2;
                     }
-
                     else
                     {
                         LoginExit = 2;
                         Environment.Exit(0);
                     }
                 }
-
             } while (LoginExit != 2);
         }
 
@@ -106,7 +91,6 @@ namespace System2
                 username = Console.ReadLine();
                 length = username.Length;
             }
-
             CheckLogin(username, password);
         }
     }

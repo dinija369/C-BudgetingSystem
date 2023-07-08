@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
-using System;
-using System.ComponentModel.Design;
-using Application;
+﻿using Application;
 using System.Data.SqlClient;
 
 namespace System2
 {
     internal class Expense
     {
-        AllowanceBalance moneyObject = new AllowanceBalance();
-        TeamSession teamSession = new TeamSession();
+        AllowanceBalance allowanceBalance = new();
+        TeamSession teamSession = new();
         float expenseMoney;
 
         private void setExpense(string department, float expenseMoney, string expenseComment, string date)
@@ -23,7 +15,6 @@ namespace System2
             SqlConnection connection = new SqlConnection(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Expense_table ([Department], [Expense], [Comment], [Date]) VALUES (@department, @expense, @comment, @date)";
-
             SqlCommand command = new SqlCommand(query, connection);
 
             command.Parameters.AddWithValue("@department", department);
@@ -32,7 +23,6 @@ namespace System2
             command.Parameters.AddWithValue("@date", date);
 
             command.ExecuteReader();
-
             connection.Close();
         }
         public void getExpense()
@@ -55,14 +45,13 @@ namespace System2
             Console.WriteLine("Comments >> ");
             string expenseComment = Console.ReadLine();
             //total spent is calculated
-            moneyObject.TotalSpent(expenseMoney);
+            allowanceBalance.TotalSpent(expenseMoney);
             //remaining balance is calculated after each expense
-            moneyObject.RemainingBalance();
+            allowanceBalance.RemainingBalance();
             //current date
             string date = DateTime.Now.ToString("dd/MM/yyyy");
             string department = teamSession.getSession();
             setExpense(department, expenseMoney, expenseComment, date);
         }
-
     }
 }

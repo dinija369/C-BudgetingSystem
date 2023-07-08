@@ -10,49 +10,44 @@ namespace System2
 {
     internal class TeamNotifications
     {
-        TeamSession teamSession = new TeamSession();
+        TeamSession teamSession = new();
         public void getNotifications()
         {
             string department = teamSession.getSession();
-
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "SELECT [Message], [Sender] FROM dbo.Team_notifications WHERE [Department] = @department";
+            SqlCommand command = new(query, connection);
 
-            SqlCommand command = new SqlCommand(query, connection);
-
-            command.Parameters.AddWithValue("@dep", department);
+            command.Parameters.AddWithValue("@department", department);
 
             SqlDataReader reader = command.ExecuteReader();
-
             while (reader.Read())
             {
-                Console.WriteLine("Sender: {0, -40}\n", reader.GetString(1));
-                Console.WriteLine("________________________");
                 Console.WriteLine(" ________________________________________ ");
-                Console.WriteLine("|Message: {0, -40}\n", reader.GetString(0));
-                Console.WriteLine("|________________________________________|");
+                Console.WriteLine("|Sender: {0, -40}", reader.GetString(1));
+                Console.WriteLine("|----------------------------------------| ");
+                Console.WriteLine("|Message:");
+                Console.WriteLine("|----------");
+                Console.WriteLine("  {0, -40}", reader.GetString(0));
             }
-
             connection.Close();
         }
 
         private void setNotification(string username, string message, string department)
         {
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Manager_notifications ([Username], [Message], [Sender]) VALUES (@username, @message, @sender)";
-
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
 
             command.Parameters.AddWithValue("@username", username);
             command.Parameters.AddWithValue("@message", message);
             command.Parameters.AddWithValue("@sender", department);
 
             command.ExecuteReader();
-
             connection.Close();
         }
 

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Application
+﻿namespace Application
 {
 	class DisplayMenu
 	{
@@ -37,6 +35,5 @@ namespace Application
             Console.WriteLine("| 1. Home | 2. Add allowance | 3. Add expense | 4. Reports | 5. Notifications | 6. Profile | 7. Exit |");
             Console.WriteLine("+----------------------------------------------------------------------------------------------------+");
         }
-
     }
 }

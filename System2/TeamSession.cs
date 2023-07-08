@@ -12,51 +12,41 @@ namespace System2
         public void setSession(string department)
         {
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "INSERT INTO dbo.Team_session ([Department]) VALUES (@department)";
-
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
 
             command.Parameters.AddWithValue("@department", department);
 
             command.ExecuteReader();
-
             connection.Close();
         }
 
         public void endSession()
         {
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "DELETE FROM dbo.Team_session";
-
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
 
             command.ExecuteReader();
-
             connection.Close();
         }
 
         public string getSession()
         {
             string department;
-
             string connString = ConnectionString.Connection();
-            SqlConnection connection = new SqlConnection(connString);
+            SqlConnection connection = new(connString);
             connection.Open();
             string query = "SELECT [Department] FROM dbo.Team_session";
-
-            SqlCommand command = new SqlCommand(query, connection);
-
+            SqlCommand command = new(query, connection);
             SqlDataReader reader = command.ExecuteReader();
 
-            reader.Read();
-            
+            reader.Read();      
             department = reader.GetString(0);
-            
-
             connection.Close();
 
             return department;
